@@ -23,17 +23,17 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" name="YP Black"/>
                             </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="Vector" translatesAutoresizingMaskIntoConstraints="NO" id="BSy-k5-Hv8">
-                                <rect key="frame" x="159" y="387" width="75" height="78"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo" translatesAutoresizingMaskIntoConstraints="NO" id="Kzz-E0-Ul6">
+                                <rect key="frame" x="152" y="377" width="97" height="98"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="BSy-k5-Hv8" secondAttribute="bottom" constant="353" id="Md7-Rq-jaH"/>
-                            <constraint firstItem="BSy-k5-Hv8" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="159" id="RQM-nE-Ckf"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="BSy-k5-Hv8" secondAttribute="trailing" constant="159" id="fJF-dC-rTB"/>
-                            <constraint firstItem="BSy-k5-Hv8" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="328" id="jg2-oJ-c3Q"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Kzz-E0-Ul6" secondAttribute="bottom" constant="343" id="1Os-G3-4ME"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Kzz-E0-Ul6" secondAttribute="trailing" constant="144" id="QqO-DM-RaU"/>
+                            <constraint firstItem="Kzz-E0-Ul6" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="318" id="cJ8-jh-4rk"/>
+                            <constraint firstItem="Kzz-E0-Ul6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="152" id="omZ-1L-tTk"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -43,7 +43,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Vector" width="75" height="78"/>
+        <image name="Logo" width="75" height="78"/>
         <namedColor name="YP Black">
             <color red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
