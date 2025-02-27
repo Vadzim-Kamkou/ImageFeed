@@ -13,6 +13,7 @@
 		0D2789572D674E6A00B6DC6B /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 0D2789562D674E6A00B6DC6B /* Base */; };
 		0D2789592D674E6C00B6DC6B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0D2789582D674E6C00B6DC6B /* Assets.xcassets */; };
 		0D27895C2D674E6C00B6DC6B /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 0D27895B2D674E6C00B6DC6B /* Base */; };
+		0D41E2352D70969800C23385 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D41E2342D70969800C23385 /* ImagesListCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		0D2789582D674E6C00B6DC6B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0D27895B2D674E6C00B6DC6B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0D27895D2D674E6C00B6DC6B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0D41E2342D70969800C23385 /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,13 +60,22 @@
 			children = (
 				0D27894F2D674E6A00B6DC6B /* AppDelegate.swift */,
 				0D2789512D674E6A00B6DC6B /* SceneDelegate.swift */,
-				0D2789532D674E6A00B6DC6B /* ImagesListViewController.swift */,
+				0D41E2362D7096E500C23385 /* ImagesList */,
 				0D2789552D674E6A00B6DC6B /* Main.storyboard */,
 				0D2789582D674E6C00B6DC6B /* Assets.xcassets */,
 				0D27895A2D674E6C00B6DC6B /* LaunchScreen.storyboard */,
 				0D27895D2D674E6C00B6DC6B /* Info.plist */,
 			);
 			path = ImageFeed;
+			sourceTree = "<group>";
+		};
+		0D41E2362D7096E500C23385 /* ImagesList */ = {
+			isa = PBXGroup;
+			children = (
+				0D41E2342D70969800C23385 /* ImagesListCell.swift */,
+				0D2789532D674E6A00B6DC6B /* ImagesListViewController.swift */,
+			);
+			path = ImagesList;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -139,6 +150,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0D2789542D674E6A00B6DC6B /* ImagesListViewController.swift in Sources */,
+				0D41E2352D70969800C23385 /* ImagesListCell.swift in Sources */,
 				0D2789502D674E6A00B6DC6B /* AppDelegate.swift in Sources */,
 				0D2789522D674E6A00B6DC6B /* SceneDelegate.swift in Sources */,
 			);
