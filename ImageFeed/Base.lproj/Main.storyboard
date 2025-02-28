@@ -174,6 +174,7 @@
                                             <outlet property="cellImage" destination="gbN-3g-YCw" id="wcI-vH-XFG"/>
                                             <outlet property="dateLabel" destination="ooj-Oi-own" id="CZE-P5-Ih7"/>
                                             <outlet property="likeButton" destination="rzt-9F-VOe" id="tkd-ig-EiA"/>
+                                            <segue destination="cWi-ht-BX8" kind="show" id="5KE-Hv-ENX"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -199,7 +200,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="417.55725190839695" y="-1038.0281690140846"/>
+            <point key="canvasLocation" x="269" y="-1038"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="8SU-Gt-u0X">
@@ -224,6 +225,36 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I7A-vX-hDu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-509.16030534351142" y="-1038.0281690140846"/>
+        </scene>
+        <!--Single Image View Controller-->
+        <scene sceneID="hrA-hf-Qb8">
+            <objects>
+                <viewController id="cWi-ht-BX8" customClass="SingleImageViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="JMH-YX-D1n">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="wUp-SA-WaM">
+                                <rect key="frame" x="0.0" y="103" width="393" height="666"/>
+                            </imageView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="ZBc-pq-Bri"/>
+                        <color key="backgroundColor" red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="wUp-SA-WaM" firstAttribute="trailing" secondItem="ZBc-pq-Bri" secondAttribute="trailing" id="KV1-rd-qBa"/>
+                            <constraint firstItem="wUp-SA-WaM" firstAttribute="leading" secondItem="ZBc-pq-Bri" secondAttribute="leading" id="ewo-mV-cGj"/>
+                            <constraint firstItem="wUp-SA-WaM" firstAttribute="top" secondItem="JMH-YX-D1n" secondAttribute="topMargin" id="pu8-7f-uYI"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="wUp-SA-WaM" secondAttribute="bottom" id="pxM-JK-Zxq"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="LvF-wL-O03"/>
+                    <connections>
+                        <outlet property="imageView" destination="wUp-SA-WaM" id="HKd-4u-EnZ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Lkz-za-QkW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="999" y="-1038"/>
         </scene>
     </scenes>
     <resources>
