@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="6Vh-ir-qID">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="6Vh-ir-qID">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -174,7 +174,6 @@
                                             <outlet property="cellImage" destination="gbN-3g-YCw" id="wcI-vH-XFG"/>
                                             <outlet property="dateLabel" destination="ooj-Oi-own" id="CZE-P5-Ih7"/>
                                             <outlet property="likeButton" destination="rzt-9F-VOe" id="tkd-ig-EiA"/>
-                                            <segue destination="cWi-ht-BX8" kind="show" id="5KE-Hv-ENX"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -196,6 +195,7 @@
                     <navigationItem key="navigationItem" id="kZp-X6-Em4"/>
                     <connections>
                         <outlet property="tableView" destination="9yG-3C-lQT" id="uUI-ge-Gf7"/>
+                        <segue destination="cWi-ht-BX8" kind="presentation" identifier="ShowSingleImage" id="2Wj-Gw-ZjG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -229,20 +229,35 @@
         <!--Single Image View Controller-->
         <scene sceneID="hrA-hf-Qb8">
             <objects>
-                <viewController id="cWi-ht-BX8" customClass="SingleImageViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="cWi-ht-BX8" customClass="SingleImageViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="JMH-YX-D1n">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="wUp-SA-WaM">
-                                <rect key="frame" x="0.0" y="103" width="393" height="666"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="wUp-SA-WaM">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WWR-H5-MsJ">
+                                <rect key="frame" x="9" y="8" width="48" height="48"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="fbq-dj-otU"/>
+                                    <constraint firstAttribute="width" constant="48" id="m5b-Bs-aQ9"/>
+                                </constraints>
+                                <color key="tintColor" name="YP White"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="btn_back"/>
+                                <connections>
+                                    <action selector="didTapBackButton:" destination="cWi-ht-BX8" eventType="touchUpInside" id="7jg-0G-GjZ"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="ZBc-pq-Bri"/>
                         <color key="backgroundColor" red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="wUp-SA-WaM" firstAttribute="trailing" secondItem="ZBc-pq-Bri" secondAttribute="trailing" id="KV1-rd-qBa"/>
+                            <constraint firstItem="WWR-H5-MsJ" firstAttribute="top" secondItem="ZBc-pq-Bri" secondAttribute="top" constant="8" id="XYt-iM-pxg"/>
                             <constraint firstItem="wUp-SA-WaM" firstAttribute="leading" secondItem="ZBc-pq-Bri" secondAttribute="leading" id="ewo-mV-cGj"/>
+                            <constraint firstItem="WWR-H5-MsJ" firstAttribute="leading" secondItem="ZBc-pq-Bri" secondAttribute="leading" constant="9" id="hZF-KA-cC7"/>
                             <constraint firstItem="wUp-SA-WaM" firstAttribute="top" secondItem="JMH-YX-D1n" secondAttribute="topMargin" id="pu8-7f-uYI"/>
                             <constraint firstAttribute="bottomMargin" secondItem="wUp-SA-WaM" secondAttribute="bottom" id="pxM-JK-Zxq"/>
                         </constraints>
@@ -254,7 +269,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lkz-za-QkW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="999" y="-1038"/>
+            <point key="canvasLocation" x="997.70992366412213" y="-1038.0281690140846"/>
         </scene>
     </scenes>
     <resources>
@@ -262,6 +277,7 @@
         <image name="Active" width="44" height="44"/>
         <image name="Exit" width="44" height="44"/>
         <image name="Userpick" width="70" height="70"/>
+        <image name="btn_back" width="24" height="24"/>
         <image name="tab_editorial_active" width="30" height="30"/>
         <image name="tab_profile_active" width="30" height="30"/>
         <namedColor name="YP Black">

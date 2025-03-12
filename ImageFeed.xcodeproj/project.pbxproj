@@ -46,7 +46,6 @@
 		0D2789432D674E6A00B6DC6B = {
 			isa = PBXGroup;
 			children = (
-				0DE35D322D7246F600CCA4E9 /* SingleImageViewController.swift */,
 				0D27894E2D674E6A00B6DC6B /* ImageFeed */,
 				0D27894D2D674E6A00B6DC6B /* Products */,
 			);
@@ -63,6 +62,7 @@
 		0D27894E2D674E6A00B6DC6B /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
+				0D99A41A2D81E3EE00AA8B6A /* SingleImageView */,
 				0D27894F2D674E6A00B6DC6B /* AppDelegate.swift */,
 				0D2789512D674E6A00B6DC6B /* SceneDelegate.swift */,
 				0DE35D312D71DCB800CCA4E9 /* ProfileView */,
@@ -82,6 +82,14 @@
 				0D2789532D674E6A00B6DC6B /* ImagesListViewController.swift */,
 			);
 			path = ImagesList;
+			sourceTree = "<group>";
+		};
+		0D99A41A2D81E3EE00AA8B6A /* SingleImageView */ = {
+			isa = PBXGroup;
+			children = (
+				0DE35D322D7246F600CCA4E9 /* SingleImageViewController.swift */,
+			);
+			path = SingleImageView;
 			sourceTree = "<group>";
 		};
 		0DE35D312D71DCB800CCA4E9 /* ProfileView */ = {
