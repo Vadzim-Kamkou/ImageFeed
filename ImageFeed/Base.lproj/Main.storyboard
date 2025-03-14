@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="6Vh-ir-qID">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="6Vh-ir-qID">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -234,9 +234,36 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="wUp-SA-WaM">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" ambiguous="YES" minimumZoomScale="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="16E-wO-3VL">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                            </imageView>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="wUp-SA-WaM">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ibC-CT-1Nn">
+                                        <rect key="frame" x="171" y="721" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="UC5-s8-lIB"/>
+                                            <constraint firstAttribute="width" constant="50" id="gTN-W2-D0E"/>
+                                        </constraints>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" image="btn_share"/>
+                                        <connections>
+                                            <action selector="didTapShareButton:" destination="cWi-ht-BX8" eventType="touchUpInside" id="wgO-Ex-Qqk"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="ibC-CT-1Nn" firstAttribute="top" secondItem="MvE-SE-trH" secondAttribute="top" constant="721" id="ETq-xa-7NG"/>
+                                    <constraint firstItem="ibC-CT-1Nn" firstAttribute="leading" secondItem="MvE-SE-trH" secondAttribute="leading" constant="171" id="wPB-Jc-VwR"/>
+                                </constraints>
+                                <viewLayoutGuide key="contentLayoutGuide" id="wHr-dA-oJ8"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="MvE-SE-trH"/>
+                                <connections>
+                                    <outlet property="delegate" destination="cWi-ht-BX8" id="ljg-Bg-CUV"/>
+                                </connections>
+                            </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WWR-H5-MsJ">
                                 <rect key="frame" x="9" y="8" width="48" height="48"/>
                                 <constraints>
@@ -254,17 +281,18 @@
                         <viewLayoutGuide key="safeArea" id="ZBc-pq-Bri"/>
                         <color key="backgroundColor" red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="wUp-SA-WaM" firstAttribute="trailing" secondItem="ZBc-pq-Bri" secondAttribute="trailing" id="KV1-rd-qBa"/>
+                            <constraint firstItem="16E-wO-3VL" firstAttribute="leading" secondItem="ZBc-pq-Bri" secondAttribute="leading" id="2Kj-PH-C0V"/>
+                            <constraint firstAttribute="bottom" secondItem="16E-wO-3VL" secondAttribute="bottom" id="NZd-L2-flN"/>
                             <constraint firstItem="WWR-H5-MsJ" firstAttribute="top" secondItem="ZBc-pq-Bri" secondAttribute="top" constant="8" id="XYt-iM-pxg"/>
-                            <constraint firstItem="wUp-SA-WaM" firstAttribute="leading" secondItem="ZBc-pq-Bri" secondAttribute="leading" id="ewo-mV-cGj"/>
+                            <constraint firstItem="ZBc-pq-Bri" firstAttribute="trailing" secondItem="16E-wO-3VL" secondAttribute="trailing" id="Zvk-ia-1FS"/>
                             <constraint firstItem="WWR-H5-MsJ" firstAttribute="leading" secondItem="ZBc-pq-Bri" secondAttribute="leading" constant="9" id="hZF-KA-cC7"/>
-                            <constraint firstItem="wUp-SA-WaM" firstAttribute="top" secondItem="JMH-YX-D1n" secondAttribute="topMargin" id="pu8-7f-uYI"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="wUp-SA-WaM" secondAttribute="bottom" id="pxM-JK-Zxq"/>
+                            <constraint firstItem="16E-wO-3VL" firstAttribute="top" secondItem="JMH-YX-D1n" secondAttribute="top" id="hbB-6W-pAl"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="LvF-wL-O03"/>
                     <connections>
                         <outlet property="imageView" destination="wUp-SA-WaM" id="HKd-4u-EnZ"/>
+                        <outlet property="scrollView" destination="16E-wO-3VL" id="flT-fq-kHG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lkz-za-QkW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -278,6 +306,7 @@
         <image name="Exit" width="44" height="44"/>
         <image name="Userpick" width="70" height="70"/>
         <image name="btn_back" width="24" height="24"/>
+        <image name="btn_share" width="50.333332061767578" height="50"/>
         <image name="tab_editorial_active" width="30" height="30"/>
         <image name="tab_profile_active" width="30" height="30"/>
         <namedColor name="YP Black">
