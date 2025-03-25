@@ -18,9 +18,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oWF-ZT-1rt" userLabel="Splashscreen Background">
-                                <rect key="frame" x="0.0" y="0.0" width="401" height="852"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="oWF-ZT-1rt" userLabel="Splashscreen Background">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                 <color key="backgroundColor" name="YP Black"/>
                             </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo" translatesAutoresizingMaskIntoConstraints="NO" id="Kzz-E0-Ul6">
@@ -31,8 +30,12 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Kzz-E0-Ul6" secondAttribute="bottom" constant="343" id="1Os-G3-4ME"/>
+                            <constraint firstAttribute="trailing" secondItem="oWF-ZT-1rt" secondAttribute="trailing" id="2lF-45-3z5"/>
+                            <constraint firstItem="oWF-ZT-1rt" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="8zu-7H-gYA"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Kzz-E0-Ul6" secondAttribute="trailing" constant="144" id="QqO-DM-RaU"/>
+                            <constraint firstAttribute="bottom" secondItem="oWF-ZT-1rt" secondAttribute="bottom" id="Uca-Go-6BL"/>
                             <constraint firstItem="Kzz-E0-Ul6" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="318" id="cJ8-jh-4rk"/>
+                            <constraint firstItem="oWF-ZT-1rt" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="k9W-j4-m15"/>
                             <constraint firstItem="Kzz-E0-Ul6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="152" id="omZ-1L-tTk"/>
                         </constraints>
                     </view>
