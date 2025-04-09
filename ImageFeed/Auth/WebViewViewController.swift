@@ -1,5 +1,5 @@
 import UIKit
-@preconcurrency import WebKit 
+import WebKit
 
 enum WebViewConstants {
     static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
@@ -81,6 +81,9 @@ final class WebViewViewController: UIViewController {
         progressView.progress = Float(webView.estimatedProgress)
         progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
     }
+    
+ 
+    
 }
 
 extension WebViewViewController: WKNavigationDelegate {
@@ -92,7 +95,6 @@ extension WebViewViewController: WKNavigationDelegate {
     ) {
         if let code = code(from: navigationAction) {
             delegate?.webViewViewController(self, didAuthenticateWithCode: code)
-            print(">>>", code)
             decisionHandler(.cancel)
         } else {
             decisionHandler(.allow)

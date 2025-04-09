@@ -4,7 +4,8 @@ final class AuthViewController: UIViewController {
     
     private let showWebViewSegueIdentifier = "ShowWebView"
     private let oauth2Service = OAuth2Service.shared
-   
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureBackButton()
@@ -32,9 +33,15 @@ final class AuthViewController: UIViewController {
 
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        //TODO: process code
-    }
 
+        print(">>> CODE SUCCESS", code)
+        
+        let request = oauth2Service.makeOAuthTokenRequest(code: code)
+        oauth2Service.fetchOAuthToken(request: request) { result in
+
+        }
+    }
+    
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         vc.dismiss(animated: true)
     }
