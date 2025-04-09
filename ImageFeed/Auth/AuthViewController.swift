@@ -34,7 +34,7 @@ final class AuthViewController: UIViewController {
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
 
-        print(">>> CODE SUCCESS", code)
+        print(">>> OAUTH2 CODE RECEIVED SUCCESSFULLY", code)
         
         let request = oauth2Service.makeOAuthTokenRequest(code: code)
         oauth2Service.fetchOAuthToken(request: request) { result in

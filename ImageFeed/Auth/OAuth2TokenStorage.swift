@@ -25,5 +25,6 @@ final class OAuth2TokenStorage: OAuth2TokenStorageProtocol {
 
     func storeBearerToken(token: String) {
         storage.set(token, forKey: "bearerToken")
+        print(">>> OAUTH2 TOKEN STORED SUCCESSFULLY", token)
     }
 }

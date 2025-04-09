@@ -27,7 +27,7 @@ final class OAuth2Service {
          return request
      }
     
-    func decode(from data: Data) -> Result<OAuthTokenResponseBody, Error> {
+    func decodeJSON(from data: Data) -> Result<OAuthTokenResponseBody, Error> {
         do {
             let responseBody = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
             return .success(responseBody)
@@ -49,29 +49,49 @@ final class OAuth2Service {
     func fetchOAuthToken(request: URLRequest, handler: @escaping (Result<Data, Error>) -> Void) {
 
 
-        // Реквест, чтобы получить код
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                handler(.failure(error))
-                return
-            }
+        let task = URLSession.shared.data(for: request) { result in
             
-            if let response = response as? HTTPURLResponse,
-                response.statusCode < 200 || response.statusCode >= 300 {
-                handler(.failure(NetworkError.codeError))
-                return
-            }
-            // Возвращаем данные
-            guard let data = data else { return }
-            switch self.decode(from: data) {
-            case .success(let response):
-                self.oAuth2TokenStorage.storeBearerToken(token: response.accessToken)
-                print(">>> TOKEN SUCCESS", response.accessToken)
-            case .failure(let error):
-                handler(.failure(error))
-            }
-            handler(.success(data))
+            switch result {
+                    case .success(let data):
+                        switch self.decodeJSON(from: data) {
+                            case .success(let response):
+                                self.oAuth2TokenStorage.storeBearerToken(token: response.accessToken)
+
+                            case .failure(let error):
+                                handler(.failure(error))
+                        }
+                        handler(.success(data))
+                    case .failure(let error):
+                        handler(.failure(error))
+                    }
+            
         }
+        
+        
+        
+        // Реквест, чтобы получить код
+//        let task1 = URLSession.shared.dataTask(with: request) { data, response, error in
+//            if let error = error {
+//                handler(.failure(error))
+//                return
+//            }
+//            
+//            if let response = response as? HTTPURLResponse,
+//                response.statusCode < 200 || response.statusCode >= 300 {
+//                handler(.failure(NetworkError.codeError))
+//                return
+//            }
+//            // Возвращаем данные
+//            guard let data = data else { return }
+//            switch self.decodeJSON(from: data) {
+//            case .success(let response):
+//                self.oAuth2TokenStorage.storeBearerToken(token: response.accessToken)
+//                print(">>> TOKEN SUCCESS", response.accessToken)
+//            case .failure(let error):
+//                handler(.failure(error))
+//            }
+//            handler(.success(data))
+//        }
         
         task.resume()
     }
