@@ -1,15 +1,5 @@
 import Foundation
 
-//{
-//    \"access_token\":\"bdnmgen0YruxtsKNaBzem8WoNuE1FlHhXSAwcVQXkd8\",
-//    \"token_type\":\"Bearer\",
-//    \"refresh_token\":\"MQ6ZZ0d-RrfgrkC7bWhkD4WLeyuhz2PRQbnPN9DCgYM\",
-//    \"scope\":\"public read_user write_likes\",
-//    \"created_at\":1743798061,
-//    \"user_id\":17980909,
-//    \"username\":\"vadzimkamkou\"
-//}
-
 struct OAuthTokenResponseBody: Decodable {
     let accessToken: String
     let tokenType: String

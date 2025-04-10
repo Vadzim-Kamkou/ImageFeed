@@ -9,7 +9,6 @@ enum NetworkError: Error {
 extension URLSession {
     
     func data(for request: URLRequest, completion: @escaping (Result<Data, Error>) -> Void) -> URLSessionTask {
-        
         let fulfillCompletionOnTheMainThread: (Result<Data, Error>) -> Void = { result in
             DispatchQueue.main.async {
                 completion(result)
@@ -22,9 +21,11 @@ extension URLSession {
                     fulfillCompletionOnTheMainThread(.success(data))
                 } else {
                     fulfillCompletionOnTheMainThread(.failure(NetworkError.httpStatusCode(statusCode)))
+                    print(">>> ОШИБКА ОТВЕТА СЕРВЕРА: ", NetworkError.httpStatusCode(statusCode))
                 }
             } else if let error = error {
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlRequestError(error)))
+                print(">>> СЕТЕВАЯ ОШИБКА: ", NetworkError.urlRequestError(error))
             } else {
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlSessionError))
             }

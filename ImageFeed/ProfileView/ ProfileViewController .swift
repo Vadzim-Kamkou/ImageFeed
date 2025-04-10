@@ -7,8 +7,8 @@ final class  ProfileViewController: UIViewController {
     private var userDescription: UILabel?
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
+    
         configProfile()
     }
     
@@ -67,7 +67,6 @@ final class  ProfileViewController: UIViewController {
     }
     
     @IBAction func didTapLogoutButton() {
-        
         userFullName?.text = "Name"
         userAccount?.text = ""
         userDescription?.text = ""

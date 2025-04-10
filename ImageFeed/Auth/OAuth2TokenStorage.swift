@@ -1,4 +1,3 @@
-
 import Foundation
 
 protocol OAuth2TokenStorageProtocol {

@@ -10,7 +10,6 @@ protocol WebViewViewControllerDelegate: AnyObject {
     func webViewViewControllerDidCancel(_ vc: WebViewViewController)
 }
 
-
 final class WebViewViewController: UIViewController {
     
     @IBOutlet private var webView: WKWebView!
@@ -22,7 +21,6 @@ final class WebViewViewController: UIViewController {
         super.viewDidLoad()
         
         webView.navigationDelegate = self
-        
         loadAuthView()
         updateProgress()
     }
@@ -81,13 +79,10 @@ final class WebViewViewController: UIViewController {
         progressView.progress = Float(webView.estimatedProgress)
         progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
     }
-    
- 
-    
 }
 
 extension WebViewViewController: WKNavigationDelegate {
-    
+
     func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction,
@@ -109,7 +104,11 @@ extension WebViewViewController: WKNavigationDelegate {
             let items = urlComponents.queryItems,
             let codeItem = items.first(where: { $0.name == "code" })
         {
-            return codeItem.value
+            guard let oAuthCode = codeItem.value else {
+                return nil
+            }
+            print(">>> OAUTH2 CODE RECEIVED SUCCESSFULLY", oAuthCode)
+            return oAuthCode
         } else {
             return nil
         }

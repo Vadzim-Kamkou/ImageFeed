@@ -17,7 +17,6 @@ final class SingleImageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
        
-        
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
         

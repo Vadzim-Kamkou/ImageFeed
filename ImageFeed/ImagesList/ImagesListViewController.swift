@@ -34,7 +34,6 @@ class ImagesListViewController: UIViewController {
             super.prepare(for: segue, sender: sender)
         }
     }
-    
 }
 
 extension ImagesListViewController: UITableViewDelegate {
@@ -90,4 +89,3 @@ extension ImagesListViewController {
        
     }
 }
-
