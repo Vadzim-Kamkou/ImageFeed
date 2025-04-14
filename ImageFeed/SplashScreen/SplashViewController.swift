@@ -3,12 +3,7 @@ import UIKit
 final class SplashViewController: UIViewController {
     
     private let showAuthenticationScreenSegueIdentifier = "showAuthenticationScreenSegueIdentifier"
-    private let oauth2Service = OAuth2Service()
     private let storage = OAuth2TokenStorage()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -54,24 +49,9 @@ final class SplashViewController: UIViewController {
 }
 
 extension SplashViewController: AuthViewControllerDelegate {
-    
-    func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
-        vc.dismiss(animated: true) { [weak self] in
-            guard let self = self else { return }
-            self.fetchOAuthToken(code)
-        }
-    }
-    
-    private func fetchOAuthToken(_ code: String) {
-        oauth2Service.fetchOAuthToken(code: code) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success:
-                self.switchToTabBarController()
-            case .failure:
-                print("TODO fetchOAuthToken() case .failure")
-                break
-            }
-        }
+
+    func didAuthenticate(_ vc: AuthViewController) {
+        vc.dismiss(animated: true)
+        self.switchToTabBarController()
     }
 }
