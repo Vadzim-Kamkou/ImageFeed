@@ -1,9 +1,17 @@
 import UIKit
 
+enum AuthServiceError: Error {
+    case invalidRequest
+}
+
 final class OAuth2Service {
     static let shared = OAuth2Service()
     private let oAuth2TokenStorage: OAuth2TokenStorageProtocol
     private var OAuthToken:String = ""
+    
+    private let urlSession = URLSession.shared
+    private var task: URLSessionTask?
+    private var lastCode: String?
     
     private init() {
         oAuth2TokenStorage = OAuth2TokenStorage()
@@ -46,14 +54,23 @@ final class OAuth2Service {
     
     func fetchOAuthToken(code: String, handler: @escaping (Result<String, Error>) -> Void) {
         
-        guard let request = makeOAuthTokenRequest(code: code) else {
+        assert(Thread.isMainThread)
+        
+        guard lastCode != code else {
+            handler(.failure(AuthServiceError.invalidRequest))
             return
         }
+        task?.cancel()
+        lastCode = code
+        
+        guard let request = makeOAuthTokenRequest(code: code) else {
+            handler(.failure(AuthServiceError.invalidRequest))
+            return
+        }
+        
         let task = URLSession.shared.data(for: request) { [weak self] result in
-            
-            guard let self = self else {return}
-            
             DispatchQueue.main.async {
+                guard let self = self else {return}
     
                 switch result {
                 case .success(let data):
@@ -68,8 +85,11 @@ final class OAuth2Service {
                 case .failure(let error):
                     handler(.failure(error))
                 }
+                self.task = nil
+                self.lastCode = nil
             }
         }
+        self.task = task
         task.resume()
     }
 }
