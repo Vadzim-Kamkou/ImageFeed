@@ -5,12 +5,29 @@ final class  ProfileViewController: UIViewController {
     private var userFullName: UILabel?
     private var userAccount: UILabel?
     private var userDescription: UILabel?
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        
         configProfile()
+        
+        guard let profile = ProfileService.shared.profile else {return}
+        updateProfileDetails(profile: profile)
     }
+
+    private func updateProfileDetails(profile: Profile) {
+        guard let name:String = ProfileService.shared.profile?.name,
+              let loginName:String = ProfileService.shared.profile?.loginName,
+              let bio:String = ProfileService.shared.profile?.bio
+        else {
+            return print("UpdateProfileDetails Error")
+        }
+        
+        userFullName?.text = name
+        userAccount?.text = loginName
+        userDescription?.text = bio
+    }
+    
     
     private func configProfile() {
         
@@ -25,7 +42,7 @@ final class  ProfileViewController: UIViewController {
         imageView.heightAnchor.constraint(equalToConstant: 70).isActive = true
         
         let userFullName = UILabel()
-        userFullName.text = "Екатерина Новикова"
+        userFullName.text = "username"
         userFullName.textColor = .ypWhite
         userFullName.font = UIFont.boldSystemFont(ofSize: 23)
         userFullName.translatesAutoresizingMaskIntoConstraints = false
@@ -35,7 +52,7 @@ final class  ProfileViewController: UIViewController {
         self.userFullName = userFullName
         
         let userAccount = UILabel()
-        userAccount.text = "@ekaterina_nov"
+        userAccount.text = "@loginName"
         userAccount.textColor = .ypGray
         userAccount.font = UIFont.systemFont(ofSize: 13)
         userAccount.translatesAutoresizingMaskIntoConstraints = false
@@ -45,7 +62,7 @@ final class  ProfileViewController: UIViewController {
         self.userAccount = userAccount
         
         let userDescription = UILabel()
-        userDescription.text = "Hello, world!"
+        userDescription.text = "bio"
         userDescription.textColor = .ypWhite
         userDescription.font = UIFont.systemFont(ofSize: 13)
         userDescription.translatesAutoresizingMaskIntoConstraints = false
@@ -67,6 +84,7 @@ final class  ProfileViewController: UIViewController {
     }
     
     @IBAction func didTapLogoutButton() {
+        
         userFullName?.text = "Name"
         userAccount?.text = ""
         userDescription?.text = ""
