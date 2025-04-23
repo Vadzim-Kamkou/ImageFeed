@@ -3,7 +3,9 @@ import UIKit
 final class SplashViewController: UIViewController {
     
     private let showAuthenticationScreenSegueIdentifier = "showAuthenticationScreenSegueIdentifier"
-    private let profileService = ProfileService.shared //+
+    private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
+    
     private let storage = OAuth2TokenStorage()
     
     override func viewDidAppear(_ animated: Bool) {
@@ -14,7 +16,8 @@ final class SplashViewController: UIViewController {
         }
         print(">>> UNSPLASH USER TOKEN IN STORAGE")
         fetchProfile(token: token)
-       
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -61,25 +64,46 @@ extension SplashViewController: AuthViewControllerDelegate {
     }
     
     private func fetchProfile(token: String) {
-            //UIBlockingProgressHUD.show()
+        //UIBlockingProgressHUD.show()
 
-            profileService.fetchProfile(token) { [weak self] result in
-                UIBlockingProgressHUD.dismiss()
+        profileService.fetchProfile(token) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
 
-                guard let self = self else { return }
- 
-                switch result {
-                case .success:
+            guard let self = self else { return }
 
-                    self.switchToTabBarController()
+            switch result {
+            case .success:
+                
+                self.switchToTabBarController()
 
-                case .failure:
-                    // TODO [Sprint 11] Покажите ошибку получения профиля
-                    print("TODO fetchProfile")
-                    break
-                }
+            case .failure:
+                // TODO [Sprint 11] Покажите ошибку получения профиля
+                print("TODO fetchProfile")
+                break
             }
         }
+        
+        guard let username = ProfileService.shared.profile?.username else {return}
+        profileImageService.fetchProfileImageURL(username: username) {[weak self] result in
+          
+            guard let self = self else { return }
+            
+            switch result {
+            case .success (let profileImageURL):
+                
+                print(profileImageURL)
+
+            case .failure:
+             
+                print("TODO profileImageService.fetchProfileImageURL")
+                break
+            }
+            
+        }
+        
+        
+    }
     
+ 
     
 }

@@ -18,9 +18,8 @@ struct Profile {
 final class ProfileService {
     
     static let shared = ProfileService()
-    private init() {
-        
-    }
+    private init() {}
+    
     private(set) var profile: Profile? = Profile.init(username: "username", name: "name", loginName: "@loginName", bio: "bio")
     
     private let urlSession = URLSession.shared
@@ -39,7 +38,7 @@ final class ProfileService {
         task?.cancel()
         lastToken = token
         
-        guard let request = makeAutorizationRequest(token: token) else {
+        guard let request = self.makeAutorizationRequest(token: token) else {
             completion(.failure(AuthServiceError.invalidRequest))
             return
         }
@@ -90,7 +89,7 @@ final class ProfileService {
         task.resume()
     }
     
-    func makeAutorizationRequest(token: String) -> URLRequest? {
+    private func makeAutorizationRequest(token: String) -> URLRequest? {
         
         guard let baseURL = URL(string: "https://api.unsplash.com/me") else {
             print("Unable to construct baseURL makeAutorizationRequest")
@@ -103,7 +102,7 @@ final class ProfileService {
         return request
      }
     
-    func decodeProfileDataJSON(from data: Data) -> Result<ProfileResult, Error> {
+    private func decodeProfileDataJSON(from data: Data) -> Result<ProfileResult, Error> {
         do {
             let responseBody = try JSONDecoder().decode(ProfileResult.self, from: data)
             print(">>> UNSPLASH PROFILE JSON SUCCESSFULLY PARSED")

@@ -5,9 +5,23 @@ final class  ProfileViewController: UIViewController {
     private var userFullName: UILabel?
     private var userAccount: UILabel?
     private var userDescription: UILabel?
+    
+    private var profileImageServiceObserver: NSObjectProtocol?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        profileImageServiceObserver = NotificationCenter.default
+                    .addObserver(
+                        forName: ProfileImageService.didChangeNotification,
+                        object: nil,
+                        queue: .main
+                    ) { [weak self] _ in
+                        guard let self = self else { return }
+                        self.updateAvatar()
+                    }
+                updateAvatar()
+        
         
         configProfile()
         
@@ -28,6 +42,13 @@ final class  ProfileViewController: UIViewController {
         userDescription?.text = bio
     }
     
+    private func updateAvatar() {
+            guard
+                let profileImageURL = ProfileImageService.shared.avatarURL,
+                let url = URL(string: profileImageURL)
+            else { return }
+            // TODO [Sprint 11] Обновить аватар, используя Kingfisher
+        }
     
     private func configProfile() {
         
