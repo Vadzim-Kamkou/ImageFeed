@@ -42,16 +42,6 @@ final class OAuth2Service {
         return request
      }
     
-    func decodeJSON(from data: Data) -> Result<OAuthTokenResponseBody, Error> {
-        do {
-            let responseBody = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
-            return .success(responseBody)
-        } catch {
-            print(">>> ОШИБКА ДЕКОДИРОВАНИЯ JSON: ", error)
-            return .failure(error)
-        }
-    }
-    
     func fetchOAuthToken(code: String, handler: @escaping (Result<String, Error>) -> Void) {
         
         assert(Thread.isMainThread)
@@ -68,20 +58,17 @@ final class OAuth2Service {
             return
         }
         
-        let task = URLSession.shared.data(for: request) { [weak self] result in
+        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
             DispatchQueue.main.async {
                 guard let self = self else {return}
     
                 switch result {
-                case .success(let data):
-                    switch self.decodeJSON(from: data) {
-                    case .success(let response):
-                        let token: String = response.accessToken
-                        self.oAuth2TokenStorage.storeBearerToken(token: token)
-                        handler(.success(token))
-                    case .failure(let error):
-                        handler(.failure(error))
-                    }
+                case .success(let oAuthTokenResponseBody):
+                    
+                    let token: String = oAuthTokenResponseBody.accessToken
+                    self.oAuth2TokenStorage.storeBearerToken(token: token)
+                    handler(.success(token))
+
                 case .failure(let error):
                     handler(.failure(error))
                 }

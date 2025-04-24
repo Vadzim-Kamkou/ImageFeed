@@ -43,41 +43,36 @@ final class ProfileService {
             return
         }
         
-        let task = URLSession.shared.data(for: request) { [weak self] result in
+        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
             DispatchQueue.main.async {
                 guard let self = self else {return}
                 switch result {
-                case .success(let data):
-                    //print(String(data: data, encoding: .utf8))
-                    switch self.decodeProfileDataJSON(from: data) {
-                    case .success(let responseBody):
+                case .success(let profileResult):
+                    
+     
+                    guard self.profile != nil else {
+                        return
+                    }
 
-                        guard self.profile != nil else {
-                            return
-                        }
-
-                        if let username = responseBody.username {
-                            let loginName = "@\(username)"
-                            self.profile?.username = username
-                            self.profile?.loginName = loginName
-                        }
-                        if let first_name = responseBody.first_name, let last_name = responseBody.last_name {
-                            let name = "\(first_name)\(" ")\(last_name)"
-                            self.profile?.name = name
-                        }
-                        if let bio = responseBody.bio {
-                            self.profile?.bio = bio
-                        }
-                        
-                        guard let profile = self.profile else {
-                            return
-                        }
-                        
-                        completion(.success(profile))
-                    case .failure(let error):
-                        completion(.failure(error))
+                    if let username = profileResult.username {
+                        let loginName = "@\(username)"
+                        self.profile?.username = username
+                        self.profile?.loginName = loginName
+                    }
+                    if let first_name = profileResult.first_name, let last_name = profileResult.last_name {
+                        let name = "\(first_name)\(" ")\(last_name)"
+                        self.profile?.name = name
+                    }
+                    if let bio = profileResult.bio {
+                        self.profile?.bio = bio
                     }
                     
+                    guard let profile = self.profile else {
+                        return
+                    }
+                    
+                    completion(.success(profile))
+
                 case .failure(let error):
                     completion(.failure(error))
                 }

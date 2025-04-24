@@ -49,28 +49,23 @@ final class ProfileImageService {
             completion(.failure(AuthServiceError.invalidRequest))
             return
         }
-        let task = URLSession.shared.data(for: request) { [weak self] result in
+
+        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
             DispatchQueue.main.async {
                 guard let self = self else {return}
                 switch result {
-                case .success(let data):
-                    switch self.decodeProfileDataJSON(from: data) {
-                    case .success(let responseBody):
-
-                        guard let profileImageURL: String = responseBody.profileImages?.small else {
-                            return
-                        }
-                        completion(.success(profileImageURL))
-                        
-                        NotificationCenter.default
-                            .post(
-                                name: ProfileImageService.didChangeNotification,
-                                object: self,
-                                userInfo: ["URL": profileImageURL])
-                        
-                    case .failure(let error):
-                        completion(.failure(error))
+                case .success(let userResult):
+                    
+                    guard let profileImageURL: String = userResult.profileImages?.small else {
+                        return
                     }
+                    completion(.success(profileImageURL))
+                    
+                    NotificationCenter.default
+                        .post(
+                            name: ProfileImageService.didChangeNotification,
+                            object: self,
+                            userInfo: ["URL": profileImageURL])
                     
                 case .failure(let error):
                     completion(.failure(error))
@@ -96,17 +91,4 @@ final class ProfileImageService {
         request.httpMethod = "GET"
         return request
      }
-    
-    private func decodeProfileDataJSON(from data: Data) -> Result<UserResult, Error> {
-        //print(String(data: data, encoding: .utf8))
-        do {
-            let responseBody = try JSONDecoder().decode(UserResult.self, from: data)
-            print(">>> UNSPLASH PROFILE IMAGE JSON SUCCESSFULLY PARSED")
-            return .success(responseBody)
-        } catch {
-            print(">>> ОШИБКА ДЕКОДИРОВАНИЯ PROFILE IMAGE JSON: ", error)
-            return .failure(error)
-        }
-    }
-    
 }
