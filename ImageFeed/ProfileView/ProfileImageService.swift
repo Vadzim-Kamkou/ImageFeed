@@ -62,11 +62,11 @@ final class ProfileImageService {
                         }
                         completion(.success(profileImageURL))
                         
-                        NotificationCenter.default                                     // 1
-                            .post(                                                     // 2
-                                name: ProfileImageService.didChangeNotification,       // 3
-                                object: self,                                          // 4
-                                userInfo: ["URL": profileImageURL])                    // 5
+                        NotificationCenter.default
+                            .post(
+                                name: ProfileImageService.didChangeNotification,
+                                object: self,
+                                userInfo: ["URL": profileImageURL])
                         
                     case .failure(let error):
                         completion(.failure(error))
