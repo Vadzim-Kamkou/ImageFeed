@@ -70,6 +70,7 @@ final class OAuth2Service {
                     handler(.success(token))
 
                 case .failure(let error):
+                    print("[\(self)]: Network Error - \(error)")
                     handler(.failure(error))
                 }
                 self.task = nil

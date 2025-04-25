@@ -68,6 +68,7 @@ final class ProfileImageService {
                             userInfo: ["URL": profileImageURL])
                     
                 case .failure(let error):
+                    print("[\(self)]: Network Error - \(error)")
                     completion(.failure(error))
                 }
                 self.task = nil

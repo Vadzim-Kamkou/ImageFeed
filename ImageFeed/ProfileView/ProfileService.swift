@@ -74,6 +74,7 @@ final class ProfileService {
                     completion(.success(profile))
 
                 case .failure(let error):
+                    print("[\(self)]: Network Error - \(error)")
                     completion(.failure(error))
                 }
                 self.task = nil

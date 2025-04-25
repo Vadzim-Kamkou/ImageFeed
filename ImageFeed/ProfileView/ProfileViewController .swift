@@ -7,20 +7,20 @@ final class  ProfileViewController: UIViewController {
     private var userDescription: UILabel?
     
     private var profileImageServiceObserver: NSObjectProtocol?
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         profileImageServiceObserver = NotificationCenter.default
-                    .addObserver(
-                        forName: ProfileImageService.didChangeNotification,
-                        object: nil,
-                        queue: .main
-                    ) { [weak self] _ in
-                        guard let self = self else { return }
-                        self.updateAvatar()
-                    }
-                updateAvatar()
+            .addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let self = self else { return }
+                self.updateAvatar()
+            }
+        updateAvatar()
         
         
         configProfile()
@@ -28,7 +28,7 @@ final class  ProfileViewController: UIViewController {
         guard let profile = ProfileService.shared.profile else {return}
         updateProfileDetails(profile: profile)
     }
-
+    
     private func updateProfileDetails(profile: Profile) {
         guard let name:String = ProfileService.shared.profile?.name,
               let loginName:String = ProfileService.shared.profile?.loginName,
@@ -43,12 +43,12 @@ final class  ProfileViewController: UIViewController {
     }
     
     private func updateAvatar() {
-            guard
-                let profileImageURL = ProfileImageService.shared.avatarURL,
-                let url = URL(string: profileImageURL)
-            else { return }
-            // TODO [Sprint 11] Обновить аватар, используя Kingfisher
-        }
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL)
+        else { return }
+        // TODO [Sprint 11] Обновить аватар, используя Kingfisher
+    }
     
     private func configProfile() {
         
@@ -91,7 +91,7 @@ final class  ProfileViewController: UIViewController {
         userDescription.leadingAnchor.constraint(equalTo: userAccount.leadingAnchor).isActive = true
         userDescription.topAnchor.constraint(equalTo: userAccount.bottomAnchor, constant: 10).isActive = true
         self.userDescription = userDescription
-
+        
         let exitImage = UIImage(resource: .exit).withRenderingMode(.alwaysOriginal)
         let buttonLogout = UIButton.systemButton(
             with: exitImage,
@@ -109,5 +109,6 @@ final class  ProfileViewController: UIViewController {
         userFullName?.text = "Name"
         userAccount?.text = ""
         userDescription?.text = ""
+        
     }
 }

@@ -13,12 +13,11 @@ extension URLSession {
             switch result {
             case .success(let data):
                 do {
-                    //print(String(data: data, encoding: .utf8))
                     let responseBody = try JSONDecoder().decode(T.self, from: data)
                     print(">>> JSON SUCCESSFULLY PARSED, \(T.self) STRUCT CREATED")
                     completion(.success(responseBody))
                 } catch {
-                    print(">>> JSON DECODE ERROR, \(T.self) STRUCT FAILED. ERROR: ", error)
+                    print(">>> JSON DECODE ERROR, \(T.self) STRUCT FAILED: \(error.localizedDescription), Данные: \(String(data: data, encoding: .utf8) ?? "")")
                     completion(.failure(error))
                 }
             case .failure(let error):
@@ -40,13 +39,14 @@ extension URLSession {
                 if 200 ..< 300 ~= statusCode {
                     fulfillCompletionOnTheMainThread(.success(data))
                 } else {
-                    fulfillCompletionOnTheMainThread(.failure(NetworkError.httpStatusCode(statusCode)))
                     print(">>> ОШИБКА ОТВЕТА СЕРВЕРА: ", NetworkError.httpStatusCode(statusCode))
+                    fulfillCompletionOnTheMainThread(.failure(NetworkError.httpStatusCode(statusCode)))
                 }
             } else if let error = error {
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlRequestError(error)))
                 print(">>> СЕТЕВАЯ ОШИБКА: ", NetworkError.urlRequestError(error))
             } else {
+                print(">>> НЕИЗВЕСТНАЯ ОШИБКА URLSessionTask", NetworkError.urlSessionError)
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlSessionError))
             }
         })

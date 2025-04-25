@@ -51,6 +51,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
             case .success:
                 self.delegate?.didAuthenticate(self)
             case .failure:
+                networkErrorAlert()
                 print("TODO fetchOAuthToken() case .failure")
                 break
             }
@@ -59,6 +60,16 @@ extension AuthViewController: WebViewViewControllerDelegate {
     
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         vc.dismiss(animated: true)
+    }
+    
+    func networkErrorAlert() {
+        let alertResult = UIAlertController(
+            title: "Что-то пошло не так",
+            message: "Не удалось войти в систему",
+            preferredStyle: .alert)
+        let action = UIAlertAction(title: "Ok", style: .default)
+        alertResult.addAction(action)
+        self.present(alertResult, animated: true, completion: nil)
     }
 }
 
