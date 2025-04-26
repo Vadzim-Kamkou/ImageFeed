@@ -84,14 +84,14 @@ extension SplashViewController: AuthViewControllerDelegate {
         }
         
         guard let username = ProfileService.shared.profile?.username else {return}
-        profileImageService.fetchProfileImageURL(username: username) {[weak self] result in
+        profileImageService.fetchProfileImageURL(username: username) { result in
           
-            guard let self = self else { return }
+         
             
             switch result {
             case .success (let profileImageURL):
-                
-                print(profileImageURL)
+
+                print("profileImageURL Recieved")
 
             case .failure:
              

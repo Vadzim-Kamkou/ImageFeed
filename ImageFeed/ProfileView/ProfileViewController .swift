@@ -1,15 +1,20 @@
 import UIKit
+import Kingfisher
 
 final class  ProfileViewController: UIViewController {
     
     private var userFullName: UILabel?
     private var userAccount: UILabel?
     private var userDescription: UILabel?
+    private var userAvatarImageView: UIImageView?
     
     private var profileImageServiceObserver: NSObjectProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        configProfile()
         
         profileImageServiceObserver = NotificationCenter.default
             .addObserver(
@@ -21,9 +26,6 @@ final class  ProfileViewController: UIViewController {
                 self.updateAvatar()
             }
         updateAvatar()
-        
-        
-        configProfile()
         
         guard let profile = ProfileService.shared.profile else {return}
         updateProfileDetails(profile: profile)
@@ -43,17 +45,33 @@ final class  ProfileViewController: UIViewController {
     }
     
     private func updateAvatar() {
+        
         guard
-            let profileImageURL = ProfileImageService.shared.avatarURL,
-            let url = URL(string: profileImageURL)
+           let profileImageURL = ProfileImageService.shared.avatarURL,
+           let url = URL(string: profileImageURL)
         else { return }
-        // TODO [Sprint 11] Обновить аватар, используя Kingfisher
+        
+        let processor = RoundCornerImageProcessor(cornerRadius: 70)
+        self.userAvatarImageView?.kf.indicatorType = .activity
+        self.userAvatarImageView?.kf.setImage(with: url,
+                                              placeholder: UIImage(named: "Userpick"),
+                                              options: [
+                                                .processor(processor)
+                                              ]){ result in
+                                                  switch result {
+                                                  case .success(let value):
+                                                      print("profileImage Added")
+                                                  case .failure(let error):
+                                                      print(error)
+                                                  }
+                                              }
     }
     
     private func configProfile() {
         
         let profileImage = UIImage(named: "Userpick")
         let imageView = UIImageView(image: profileImage)
+        
         imageView.tintColor = .gray
         imageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(imageView)
@@ -61,6 +79,7 @@ final class  ProfileViewController: UIViewController {
         imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 70).isActive = true
         imageView.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        self.userAvatarImageView = imageView
         
         let userFullName = UILabel()
         userFullName.text = "username"

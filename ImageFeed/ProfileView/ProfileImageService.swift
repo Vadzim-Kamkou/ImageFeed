@@ -59,8 +59,9 @@ final class ProfileImageService {
                     guard let profileImageURL: String = userResult.profileImages?.small else {
                         return
                     }
+                    self.avatarURL = profileImageURL
                     completion(.success(profileImageURL))
-                    
+
                     NotificationCenter.default
                         .post(
                             name: ProfileImageService.didChangeNotification,
@@ -92,4 +93,6 @@ final class ProfileImageService {
         request.httpMethod = "GET"
         return request
      }
+    
+    
 }
