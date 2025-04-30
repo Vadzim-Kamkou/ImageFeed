@@ -51,16 +51,20 @@ final class  ProfileViewController: UIViewController {
            let url = URL(string: profileImageURL)
         else { return }
         
+        let cache = ImageCache.default
+        cache.clearMemoryCache()
+        cache.clearDiskCache()
+        
         let processor = RoundCornerImageProcessor(cornerRadius: 70)
         self.userAvatarImageView?.kf.indicatorType = .activity
         self.userAvatarImageView?.kf.setImage(with: url,
-                                              placeholder: UIImage(named: "Userpick"),
+                                              //placeholder: UIImage(named: "Userpick"),
                                               options: [
                                                 .processor(processor)
                                               ]){ result in
                                                   switch result {
                                                   case .success(let value):
-                                                      print("profileImage Added")
+                                                      print("profileImage Added\(value)")
                                                   case .failure(let error):
                                                       print(error)
                                                   }

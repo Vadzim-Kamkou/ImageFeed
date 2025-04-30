@@ -133,7 +133,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="HEm-El-P5q">
             <objects>
-                <tabBarController storyboardIdentifier="TabBarViewController" id="6Vh-ir-qID" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="TabBarViewController" id="6Vh-ir-qID" customClass="TabBarController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="2WL-NC-VKF">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -143,35 +143,15 @@
                             <color key="backgroundColor" name="YP Black"/>
                         </tabBarAppearance>
                     </tabBar>
-                    <connections>
-                        <segue destination="6pb-Ib-XmD" kind="relationship" relationship="viewControllers" id="WwA-Pl-tUG"/>
-                        <segue destination="P3b-Ts-Eji" kind="relationship" relationship="viewControllers" id="wf9-I6-g2P"/>
-                    </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uyl-Dw-KMn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-385.49618320610688" y="-729.57746478873241"/>
         </scene>
-        <!--Profile View Controller-->
-        <scene sceneID="lrJ-Cg-ubx">
-            <objects>
-                <viewController id="P3b-Ts-Eji" customClass="ProfileViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="yHJ-T2-eFb">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="SjL-PZ-d5c"/>
-                        <color key="backgroundColor" name="YP Black"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="" image="tab_profile_active" id="THj-aI-4eE"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="P7z-uL-aKt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="417.55725190839695" y="-354.22535211267609"/>
-        </scene>
         <!--ImageList-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController title="ImageList" id="BYZ-38-t0r" customClass="ImagesListViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ImagesListViewController" title="ImageList" id="BYZ-38-t0r" customClass="ImagesListViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -262,7 +242,7 @@
         <scene sceneID="8SU-Gt-u0X">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="6pb-Ib-XmD" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" image="tab_editorial_active" id="ef4-b3-vY2"/>
+                    <tabBarItem key="tabBarItem" title="" image="tab_profile_active" id="ef4-b3-vY2"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="VHx-rX-HR4">
                         <rect key="frame" x="0.0" y="59" width="393" height="44"/>
@@ -380,7 +360,6 @@
         <image name="auth_screen_logo" width="60" height="60"/>
         <image name="btn_back" width="24" height="24"/>
         <image name="btn_share" width="50.333332061767578" height="50"/>
-        <image name="tab_editorial_active" width="30" height="30"/>
         <image name="tab_profile_active" width="30" height="30"/>
         <namedColor name="YP Black">
             <color red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
