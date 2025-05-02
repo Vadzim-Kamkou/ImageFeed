@@ -38,7 +38,7 @@ final class SplashViewController: UIViewController {
             return self.present(navigationVC, animated: true)
         }
         print(">>> UNSPLASH USER TOKEN IN STORAGE")
-       fetchProfile(token: token)
+        fetchProfile(token: token)
     }
     
     // MARK: Private Functions

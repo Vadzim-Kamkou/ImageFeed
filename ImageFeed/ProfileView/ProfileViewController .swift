@@ -13,7 +13,6 @@ final class  ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         configProfile()
         
         profileImageServiceObserver = NotificationCenter.default
@@ -134,6 +133,5 @@ final class  ProfileViewController: UIViewController {
         userFullName?.text = "Name"
         userAccount?.text = ""
         userDescription?.text = ""
-        
     }
 }

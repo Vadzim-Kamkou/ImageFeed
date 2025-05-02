@@ -93,6 +93,4 @@ final class ProfileImageService {
         request.httpMethod = "GET"
         return request
      }
-    
-    
 }

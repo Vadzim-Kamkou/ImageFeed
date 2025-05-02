@@ -1,70 +1,8 @@
 import Foundation
 
 /*:
- Unsplash Documentation
+ Unsplash Documentation Get the user’s profile JSON
  https://unsplash.com/documentation#current-user
- Get the user’s profile  JSON
- >>>
- Optional("{
- \"id\":\"2ntxW4Z2kkI\",
- \"updated_at\":\"2025-04-18T10:12:21Z\",
- \"username\":\"vadzimkamkou\",
- \"name\":\"Vadzim Kamkou\",
- \"first_name\":\"Vadzim\",
- \"last_name\":\"Kamkou\",
- \"twitter_username\":null,
- \"portfolio_url\":null,
- \"bio\":null,
- \"location\":null,
- \"links\":{
-    \"self\":\"https://api.unsplash.com/users/vadzimkamkou\",
-    \"html\":\"https://unsplash.com/@vadzimkamkou\",
-    \"photos\":\"https://api.unsplash.com/users/vadzimkamkou/photos\",
-    \"likes\":\"https://api.unsplash.com/users/vadzimkamkou/likes\",
-    \"portfolio\":\"https://api.unsplash.com/users/vadzimkamkou/portfolio\"
- },
- 
- \"profile_image\":{
-    \"small\":\"https://images.unsplash.com/placeholder-avatars/extra-large.jpg?ixlib=rb-4.0.3\\u0026crop=faces\\u0026fit=crop\\u0026w=32\\u0026h=32\",
-    \"medium\":\"https://images.unsplash.com/placeholder-avatars/extra-large.jpg?ixlib=rb-4.0.3\\u0026crop=faces\\u0026fit=crop\\u0026w=64\\u0026h=64\",
-    \"large\":\"https://images.unsplash.com/placeholder-avatars/extra-large.jpg?ixlib=rb-4.0.3\\u0026crop=faces\\u0026fit=crop\\u0026w=128\\u0026h=128\"
- },
- \"instagram_username\":null,
- \"total_collections\":0,
- \"total_likes\":0,
- \"total_photos\":0,
- \"total_promoted_photos\":0,
- \"total_illustrations\":0,
- \"total_promoted_illustrations\":0,
- \"accepted_tos\":false,
- \"for_hire\":false,
- \"social\":{
-    \"instagram_username\":null,
-    \"portfolio_url\":null,
-    \"twitter_username\":null,
-    \"paypal_email\":null},
-    \"photos\":[],
-    \"badge\":null,
-    \"tags\":{
-        \"custom\":[],
-        \"aggregated\":[]
-    },
-    \"allow_messages\":true,
-    \"numeric_id\":17980909,
-    \"downloads\":0,
-    \"meta\":{
-        \"index\":false
-    },
-    \"uid\":\"2ntxW4Z2kkI\",
-    \"confirmed\":true,
-    \"uploads_remaining\":10,
-    \"unlimited_uploads\":false,
-    \"email\":\"vadzim.kamkou@gmail.com\",
-    \"dmca_verification\":\"unverified\",
-    \"unread_in_app_notifications\":false,
-    \"unread_highlight_notifications\":false
- }")
-
  */
 
 struct ProfileResult: Codable {
@@ -85,7 +23,6 @@ struct ProfileResult: Codable {
     let instagram_username: String?
     let location_additional: String?
     let email: String?
-    //let links: [UserProfileLinks]
     
     init(
         id: String,
@@ -105,7 +42,6 @@ struct ProfileResult: Codable {
         instagram_username: String,
         location_additional: String?,
         email: String?
-        //links: [UserProfileLinks]
     ){
         self.id = id
         self.updated_at = updated_at
@@ -124,7 +60,6 @@ struct ProfileResult: Codable {
         self.instagram_username = instagram_username
         self.location_additional = location_additional
         self.email = email
-        //self.links = links
     }
     
     private enum CodingKeys: String, CodingKey {
@@ -145,30 +80,5 @@ struct ProfileResult: Codable {
         case instagram_username = "instagram_username"
         case location_additional = ""
         case email = "email"
-        //case links = "links"
     }
 }
-//
-//struct UserProfileLinks: Codable {
-//    let userLinkAPI: String?
-//    let html: String?
-//    let photos: String?
-//    let likes: String?
-//    let portfolio: String?
-//    
-//    init(userLinkAPI: String, html: String, photos: String, likes: String, portfolio: String) {
-//        self.userLinkAPI = userLinkAPI
-//        self.html = html
-//        self.photos = photos
-//        self.likes = likes
-//        self.portfolio = portfolio
-//    }
-//    
-//    private enum CodingKeys: String, CodingKey {
-//        case userLinkAPI = "self"
-//        case html = "html"
-//        case photos = "photos"
-//        case likes = "likes"
-//        case portfolio = "portfolio"
-//    }
-//}
