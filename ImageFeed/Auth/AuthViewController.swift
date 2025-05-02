@@ -11,6 +11,7 @@ final class AuthViewController: UIViewController {
     private let oauth2Service = OAuth2Service.shared
     weak var delegate: AuthViewControllerDelegate?
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureBackButton()
@@ -30,6 +31,7 @@ final class AuthViewController: UIViewController {
                 return
             }
             webViewViewController.delegate = self
+            print(webViewViewController.delegate = self)
         } else {
             super.prepare(for: segue, sender: sender)
         }
@@ -46,13 +48,12 @@ extension AuthViewController: WebViewViewControllerDelegate {
         oauth2Service.fetchOAuthToken(code: code) { [weak self] result in
             guard let self = self else { return }
             //UIBlockingProgressHUD.dismiss()
-            
             switch result {
             case .success:
                 self.delegate?.didAuthenticate(self)
-            case .failure:
+            case .failure(let error):
                 networkErrorAlert()
-                print("TODO fetchOAuthToken() case .failure")
+                print("[\(self)]: fetchProfileImageURL - \(error)")
                 break
             }
         }
