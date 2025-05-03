@@ -98,14 +98,14 @@ final class ProfileService {
         return request
      }
     
-    private func decodeProfileDataJSON(from data: Data) -> Result<ProfileResult, Error> {
-        do {
-            let responseBody = try JSONDecoder().decode(ProfileResult.self, from: data)
-            print(">>> UNSPLASH PROFILE JSON SUCCESSFULLY PARSED")
-            return .success(responseBody)
-        } catch {
-            print(">>> ОШИБКА ДЕКОДИРОВАНИЯ JSON: ", error)
-            return .failure(error)
-        }
-    }
+//    private func decodeProfileDataJSON(from data: Data) -> Result<ProfileResult, Error> {
+//        do {
+//            let responseBody = try JSONDecoder().decode(ProfileResult.self, from: data)
+//            print(">>> UNSPLASH PROFILE JSON SUCCESSFULLY PARSED")
+//            return .success(responseBody)
+//        } catch {
+//            print(">>> ОШИБКА ДЕКОДИРОВАНИЯ JSON: ", error)
+//            return .failure(error)
+//        }
+//    }
 }
