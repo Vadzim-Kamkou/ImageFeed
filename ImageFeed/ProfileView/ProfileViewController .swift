@@ -72,7 +72,7 @@ final class  ProfileViewController: UIViewController {
     
     private func configProfile() {
         
-        self.view.backgroundColor = UIColor.ypBlack
+        view.backgroundColor = UIColor.ypBlack
         
         let profileImage = UIImage(named: "Userpick")
         let imageView = UIImageView(image: profileImage)

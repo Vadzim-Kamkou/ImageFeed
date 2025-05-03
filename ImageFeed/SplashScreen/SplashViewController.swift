@@ -43,7 +43,7 @@ final class SplashViewController: UIViewController {
     
     // MARK: Private Functions
     private func configSplashScreen() {
-        self.view.backgroundColor = UIColor.ypBlack
+        view.backgroundColor = UIColor.ypBlack
         
         let logoImage = UIImage(named: "splash_screen_logo")
         let logoImageView = UIImageView(image: logoImage)

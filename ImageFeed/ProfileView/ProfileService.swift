@@ -1,4 +1,4 @@
-import UIKit
+import Foundation
 
 struct Profile {
     
@@ -43,7 +43,7 @@ final class ProfileService {
             return
         }
         
-        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
+        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<profileResult, Error>) in
             DispatchQueue.main.async {
                 guard let self = self else {return}
                 switch result {
@@ -98,9 +98,9 @@ final class ProfileService {
         return request
      }
     
-    private func decodeProfileDataJSON(from data: Data) -> Result<ProfileResult, Error> {
+    private func decodeProfileDataJSON(from data: Data) -> Result<profileResult, Error> {
         do {
-            let responseBody = try JSONDecoder().decode(ProfileResult.self, from: data)
+            let responseBody = try JSONDecoder().decode(profileResult.self, from: data)
             print(">>> UNSPLASH PROFILE JSON SUCCESSFULLY PARSED")
             return .success(responseBody)
         } catch {

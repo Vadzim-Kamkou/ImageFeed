@@ -22,6 +22,7 @@
 		0D5262262DA52E460001F44B /* URLSession+data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D5262252DA52E460001F44B /* URLSession+data.swift */; };
 		0D52DC0E2DA6921500A9A1E8 /* OAuth2TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D52DC0D2DA6921500A9A1E8 /* OAuth2TokenStorage.swift */; };
 		0D52DC112DA6F23000A9A1E8 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D52DC102DA6F23000A9A1E8 /* SplashViewController.swift */; };
+		0D5A6CB72DC691F900B83BF9 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D5A6CB62DC691F900B83BF9 /* WebKit.framework */; };
 		0D7E44002DB1277500804CA2 /* UIBlockingProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7E43FF2DB1277000804CA2 /* UIBlockingProgressHUD.swift */; };
 		0D7E44022DB12B1900804CA2 /* ProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7E44012DB12B1400804CA2 /* ProfileService.swift */; };
 		0D7E44062DB26EEE00804CA2 /* ProfileUnsplashResultModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D7E44052DB26EE900804CA2 /* ProfileUnsplashResultModel.swift */; };
@@ -51,6 +52,7 @@
 		0D5262252DA52E460001F44B /* URLSession+data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+data.swift"; sourceTree = "<group>"; };
 		0D52DC0D2DA6921500A9A1E8 /* OAuth2TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2TokenStorage.swift; sourceTree = "<group>"; };
 		0D52DC102DA6F23000A9A1E8 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
+		0D5A6CB62DC691F900B83BF9 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		0D7E43FF2DB1277000804CA2 /* UIBlockingProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBlockingProgressHUD.swift; sourceTree = "<group>"; };
 		0D7E44012DB12B1400804CA2 /* ProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileService.swift; sourceTree = "<group>"; };
 		0D7E44052DB26EE900804CA2 /* ProfileUnsplashResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileUnsplashResultModel.swift; sourceTree = "<group>"; };
@@ -68,6 +70,7 @@
 			files = (
 				0DA39A9A2DBC073C00738593 /* Kingfisher in Frameworks */,
 				0D48EA8D2DAEBEF200EF0C79 /* ProgressHUD in Frameworks */,
+				0D5A6CB72DC691F900B83BF9 /* WebKit.framework in Frameworks */,
 				0DA39A9D2DBD5ED400738593 /* SwiftKeychainWrapper in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -92,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				0D27894E2D674E6A00B6DC6B /* ImageFeed */,
+				0D5A6CB52DC691F900B83BF9 /* Frameworks */,
 				0D27894D2D674E6A00B6DC6B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -147,6 +151,14 @@
 				0D52DC102DA6F23000A9A1E8 /* SplashViewController.swift */,
 			);
 			path = SplashScreen;
+			sourceTree = "<group>";
+		};
+		0D5A6CB52DC691F900B83BF9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0D5A6CB62DC691F900B83BF9 /* WebKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		0D7E43FE2DB1274000804CA2 /* UIBlockingProgressHUD */ = {

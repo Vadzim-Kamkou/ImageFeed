@@ -45,7 +45,7 @@ final class ProfileImageService {
         
        
         
-        guard let request = self.makeAutorizationRequest(token: token, username: username) else {
+        guard let request = makeAutorizationRequest(token: token, username: username) else {
             completion(.failure(AuthServiceError.invalidRequest))
             return
         }
