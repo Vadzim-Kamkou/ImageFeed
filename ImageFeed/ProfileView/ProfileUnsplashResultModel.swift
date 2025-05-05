@@ -1,6 +1,6 @@
 import Foundation
 
-/*:
+/*
  Unsplash Documentation Get the user’s profile JSON
  https://unsplash.com/documentation#current-user
  */

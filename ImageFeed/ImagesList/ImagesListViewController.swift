@@ -35,12 +35,12 @@ final class ImagesListViewController: UIViewController {
     }
 }
 
+//MARK: EXTENSIONS
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "ShowSingleImage", sender: indexPath)
     }
     
-
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let image = UIImage(named: photosName[indexPath.row]) else {
             return 0
@@ -53,6 +53,7 @@ extension ImagesListViewController: UITableViewDelegate {
         
         return callHeight
     }
+    
 }
 
 extension ImagesListViewController: UITableViewDataSource {
@@ -75,6 +76,9 @@ extension ImagesListViewController: UITableViewDataSource {
 extension ImagesListViewController {
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         
+        tableView(self.tableView, willDisplay: cell, forRowAt: indexPath)
+        
+        
         guard let image = UIImage(named: photosName[indexPath.row]) else {
             return
         }
@@ -85,6 +89,20 @@ extension ImagesListViewController {
         let isLiked = indexPath.row % 2 == 0
         let likeImage = isLiked ? UIImage(named: "Active") : UIImage(named: "NoActive")
         cell.likeButton.setImage(likeImage, for: .normal)
-       
+    }
+    
+}
+
+extension ImagesListViewController {
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+        let imagesListService = ImagesListService.shared
+        print("!\(indexPath)")
+        //imagesListService.fetchPhotosNextPage()
+        // проверяем
+//        if indexPath.row + 1 == imagesListService.photos.count {
+//            imagesListService.fetchPhotosNextPage()
+//        }
+        
     }
 }
