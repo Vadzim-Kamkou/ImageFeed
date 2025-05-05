@@ -1,21 +1,82 @@
 import UIKit
+import Kingfisher
 
 final class  ProfileViewController: UIViewController {
     
     private var userFullName: UILabel?
     private var userAccount: UILabel?
     private var userDescription: UILabel?
+    private var userAvatarImageView: UIImageView?
+    
+    private var profileImageServiceObserver: NSObjectProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        
         configProfile()
+        
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let self = self else { return }
+                self.updateAvatar()
+            }
+        updateAvatar()
+        
+        guard let profile = ProfileService.shared.profile else {return}
+        updateProfileDetails(profile: profile)
+    }
+    
+    private func updateProfileDetails(profile: Profile) {
+        guard let name:String = ProfileService.shared.profile?.name,
+              let loginName:String = ProfileService.shared.profile?.loginName,
+              let bio:String = ProfileService.shared.profile?.bio
+        else {
+            return print("UpdateProfileDetails Error")
+        }
+        
+        userFullName?.text = name
+        userAccount?.text = loginName
+        userDescription?.text = bio
+    }
+    
+    private func updateAvatar() {
+        
+        guard
+           let profileImageURL = ProfileImageService.shared.avatarURL,
+           let url = URL(string: profileImageURL)
+        else { return }
+        
+        let cache = ImageCache.default
+        cache.clearMemoryCache()
+        cache.clearDiskCache()
+        
+        let processor = RoundCornerImageProcessor(cornerRadius: 70)
+        self.userAvatarImageView?.kf.indicatorType = .activity
+        self.userAvatarImageView?.kf.setImage(with: url,
+                                              //placeholder: UIImage(named: "Userpick"),
+                                              options: [
+                                                .processor(processor)
+                                              ]){ result in
+                                                  switch result {
+                                                  case .success(let value):
+                                                      print("profileImage Added\(value)")
+                                                  case .failure(let error):
+                                                      print(error)
+                                                  }
+                                              }
     }
     
     private func configProfile() {
         
+        view.backgroundColor = UIColor.ypBlack
+        
         let profileImage = UIImage(named: "Userpick")
         let imageView = UIImageView(image: profileImage)
+        
         imageView.tintColor = .gray
         imageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(imageView)
@@ -23,9 +84,10 @@ final class  ProfileViewController: UIViewController {
         imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 70).isActive = true
         imageView.heightAnchor.constraint(equalToConstant: 70).isActive = true
+        self.userAvatarImageView = imageView
         
         let userFullName = UILabel()
-        userFullName.text = "Екатерина Новикова"
+        userFullName.text = "username"
         userFullName.textColor = .ypWhite
         userFullName.font = UIFont.boldSystemFont(ofSize: 23)
         userFullName.translatesAutoresizingMaskIntoConstraints = false
@@ -35,7 +97,7 @@ final class  ProfileViewController: UIViewController {
         self.userFullName = userFullName
         
         let userAccount = UILabel()
-        userAccount.text = "@ekaterina_nov"
+        userAccount.text = "@loginName"
         userAccount.textColor = .ypGray
         userAccount.font = UIFont.systemFont(ofSize: 13)
         userAccount.translatesAutoresizingMaskIntoConstraints = false
@@ -45,7 +107,7 @@ final class  ProfileViewController: UIViewController {
         self.userAccount = userAccount
         
         let userDescription = UILabel()
-        userDescription.text = "Hello, world!"
+        userDescription.text = "bio"
         userDescription.textColor = .ypWhite
         userDescription.font = UIFont.systemFont(ofSize: 13)
         userDescription.translatesAutoresizingMaskIntoConstraints = false
@@ -53,7 +115,7 @@ final class  ProfileViewController: UIViewController {
         userDescription.leadingAnchor.constraint(equalTo: userAccount.leadingAnchor).isActive = true
         userDescription.topAnchor.constraint(equalTo: userAccount.bottomAnchor, constant: 10).isActive = true
         self.userDescription = userDescription
-
+        
         let exitImage = UIImage(resource: .exit).withRenderingMode(.alwaysOriginal)
         let buttonLogout = UIButton.systemButton(
             with: exitImage,
@@ -67,6 +129,7 @@ final class  ProfileViewController: UIViewController {
     }
     
     @IBAction func didTapLogoutButton() {
+        
         userFullName?.text = "Name"
         userAccount?.text = ""
         userDescription?.text = ""

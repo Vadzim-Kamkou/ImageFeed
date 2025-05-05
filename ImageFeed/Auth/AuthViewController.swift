@@ -1,4 +1,5 @@
 import UIKit
+import ProgressHUD
 
 protocol AuthViewControllerDelegate: AnyObject {
     func didAuthenticate(_ vc: AuthViewController)
@@ -9,6 +10,7 @@ final class AuthViewController: UIViewController {
     private let showWebViewSegueIdentifier = "ShowWebView"
     private let oauth2Service = OAuth2Service.shared
     weak var delegate: AuthViewControllerDelegate?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +31,7 @@ final class AuthViewController: UIViewController {
                 return
             }
             webViewViewController.delegate = self
+            print(webViewViewController.delegate = self)
         } else {
             super.prepare(for: segue, sender: sender)
         }
@@ -39,13 +42,18 @@ extension AuthViewController: WebViewViewControllerDelegate {
     
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         
-        vc.dismiss(animated: true)
-        oauth2Service.fetchOAuthToken(code: code) {result in
+        UIBlockingProgressHUD.show()
+        navigationController?.popViewController(animated: true)
+        
+        oauth2Service.fetchOAuthToken(code: code) { [weak self] result in
+            guard let self = self else { return }
+            //UIBlockingProgressHUD.dismiss()
             switch result {
             case .success:
                 self.delegate?.didAuthenticate(self)
-            case .failure:
-                print("TODO fetchOAuthToken() case .failure")
+            case .failure(let error):
+                networkErrorAlert()
+                print("[\(self)]: fetchProfileImageURL - \(error)")
                 break
             }
         }
@@ -53,6 +61,16 @@ extension AuthViewController: WebViewViewControllerDelegate {
     
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         vc.dismiss(animated: true)
+    }
+    
+    func networkErrorAlert() {
+        let alertResult = UIAlertController(
+            title: "Что-то пошло не так",
+            message: "Не удалось войти в систему",
+            preferredStyle: .alert)
+        let action = UIAlertAction(title: "Ok", style: .default)
+        alertResult.addAction(action)
+        self.present(alertResult, animated: true, completion: nil)
     }
 }
 

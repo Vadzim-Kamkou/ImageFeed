@@ -1,4 +1,5 @@
 import Foundation
+import SwiftKeychainWrapper
 
 protocol OAuth2TokenStorageProtocol {
     var token: String? { get }
@@ -7,23 +8,26 @@ protocol OAuth2TokenStorageProtocol {
 
 final class OAuth2TokenStorage: OAuth2TokenStorageProtocol {
   
-    private let storage: UserDefaults = .standard
-    
-    private enum Keys: String {
-        case token = "bearerToken"
-    }
+    private let storage: KeychainWrapper = .standard
+    private let tokenKey: String = "bearerToken"
     
     var token: String? {
         get {
-            storage.string(forKey: Keys.token.rawValue)
+            KeychainWrapper.standard.string(forKey: tokenKey)
         }
         set {
-            storage.set(newValue, forKey: Keys.token.rawValue)
+            guard let newValue else {return}
+            KeychainWrapper.standard.set(newValue, forKey: tokenKey)
         }
     }
 
     func storeBearerToken(token: String) {
-        storage.set(token, forKey: "bearerToken")
+        
+        let isSuccess = storage.set(token, forKey: tokenKey)
+        guard isSuccess else {
+            print("OAUTH2 TOKEN STORED FAILED")
+            return
+        }
         print(">>> OAUTH2 TOKEN STORED SUCCESSFULLY", token)
     }
 }
