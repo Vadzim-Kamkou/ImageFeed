@@ -12,10 +12,28 @@ final class ImagesListViewController: UIViewController {
         formatter.timeStyle = .none
         return formatter
     }()
+    let imagesListService = ImagesListService.shared
+    
+    private var imagesListServiceObserver: NSObjectProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+        imagesListService.fetchPhotosNextPage()
+        
+        // Нужно дописать, непонятно зачем эта нотификация
+        imagesListServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ImagesListService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let self = self else { return }
+                print("Notification ImagesListService.didChangeNotification")
+            }
+        
+        
+        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -53,7 +71,6 @@ extension ImagesListViewController: UITableViewDelegate {
         
         return callHeight
     }
-    
 }
 
 extension ImagesListViewController: UITableViewDataSource {
@@ -91,18 +108,10 @@ extension ImagesListViewController {
         cell.likeButton.setImage(likeImage, for: .normal)
     }
     
-}
-
-extension ImagesListViewController {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        
-        let imagesListService = ImagesListService.shared
-        print("!\(indexPath)")
-        //imagesListService.fetchPhotosNextPage()
-        // проверяем
-//        if indexPath.row + 1 == imagesListService.photos.count {
-//            imagesListService.fetchPhotosNextPage()
-//        }
-        
+        if indexPath.row + 1 == imagesListService.photos.count {
+            imagesListService.fetchPhotosNextPage()
+        }
     }
 }
+
