@@ -10,6 +10,8 @@ final class SingleImageViewController: UIViewController {
             rescaleAndCenterImageInScrollView(image: image)
         }
     }
+    
+    var largeImageURL: URL?
 
     @IBOutlet private var imageView: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
@@ -20,18 +22,15 @@ final class SingleImageViewController: UIViewController {
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
         
-        guard let image else { return }
-        imageView.image = image
-        imageView.frame.size = image.size
-        rescaleAndCenterImageInScrollView(image: image)
-        
+        loadLargeImageURL ()
     }
+    
     @IBAction private func didTapBackButton(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
     
     @IBAction func didTapShareButton(_ sender: UIButton) {
-            guard let image else { return }
+        guard let image else { return }
             let share = UIActivityViewController(
                 activityItems: [image],
                 applicationActivities: nil
@@ -39,6 +38,20 @@ final class SingleImageViewController: UIViewController {
             present(share, animated: true, completion: nil)
         }
     
+    private func loadLargeImageURL () {
+        guard let largeImageURL else {return}
+        imageView.kf.indicatorType = .activity
+        imageView.kf.setImage(with: largeImageURL,
+                              placeholder: UIImage(resource: .downloading)) { result in
+                                                switch result {
+                                                case .success(let value):
+                                                    self.image = value.image
+                                                case .failure(let error):
+                                                    print(error)
+                                                }
+                                            }
+    }
+
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
         let minZoomScale = scrollView.minimumZoomScale
         let maxZoomScale = scrollView.maximumZoomScale

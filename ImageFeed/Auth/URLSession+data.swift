@@ -62,6 +62,7 @@ extension URLSession {
                     let responseBody = try JSONDecoder().decode([T].self, from: data)
                     print(">>> JSON SUCCESSFULLY PARSED, \([T].self) STRUCT CREATED")
                     completion(.success(responseBody))
+                    
                 } catch {
                     print(">>> JSON DECODE ERROR, \([T].self) STRUCT FAILED: \(error.localizedDescription), Данные: \(String(data: data, encoding: .utf8) ?? "")")
                     completion(.failure(error))

@@ -22,14 +22,6 @@ final class ImagesListService {
     private let storage = OAuth2TokenStorage()
     
     private(set) var photos: [Photo] = []
-    // Дубликат, вынести в общую функцию
-//    private lazy var dateFormatter: DateFormatter = {
-//        let formatter = DateFormatter()
-//        formatter.dateStyle = .long
-//        formatter.timeStyle = .none
-//        return formatter
-//    }()
-    
     private var lastLoadedPage: Int?
     static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
   
@@ -56,7 +48,6 @@ final class ImagesListService {
             //completion(.failure(AuthServiceError.invalidRequest))
             return
         }
-        print(request)
         
 
         let task = URLSession.shared.objectTaskArray(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
@@ -68,7 +59,6 @@ final class ImagesListService {
                         self.lastLoadedPage = nextPage
                         
                         for i in 0...photoResult.count - 1 {
-                            
                             let id = photoResult[i].id ?? ""
                             let size = CGSize(width: photoResult[i].width ?? .zero, height: photoResult[i].height ?? .zero)
                             let createdAt = photoResult[i].createdAt ?? ""
@@ -86,29 +76,30 @@ final class ImagesListService {
                                 largeImageURL: largeImageURL,
                                 isLiked: likedByUser
                             )
-                            self.photos.append(photoDescription)
+                            
+                            let existingIDs = Set(self.photos.map { $0.id })
+                            if !existingIDs.contains(photoDescription.id) {
+                                self.photos.append(photoDescription)
+                            }
                         }
-                        
-                        // скорее всего вызов нотификации должен быть после обновления значения массива для запуска скачивания фото.
-                        // но это как-то странно, очевидно 10 урлов загрузятся быстро, а загрузка фоток должна идти друг за другом.
+
                         NotificationCenter.default
                             .post(
                                 name: ImagesListService.didChangeNotification,
-                                object: self,
-                                userInfo: ["URL": "!"]) // TODO непонятно что сюда передавать. Был урл
-                        
+                                object: self)
+
                         // для отладки
-                        for i in 0...self.photos.count - 1 {
-                            print("Photo \(i+1)")
-                            print("id \(self.photos[i].id)")
-                            print("size \(self.photos[i].size)")
-                            print("createdAt \(self.photos[i].createdAt)")
-                            print("welcomeDescription \(self.photos[i].welcomeDescription)")
-                            print("thumbImageURL  \(self.photos[i].thumbImageURL)")
-                            print("largeImageURL  \(self.photos[i].largeImageURL)")
-                            print("isLiked  \(self.photos[i].isLiked)")
-                            print("")
-                        }
+//                        for i in 0...self.photos.count - 1 {
+//                            print("Photo \(i+1) id = \(self.photos[i].id)")
+//                            print()
+//                            print("size \(self.photos[i].size)")
+//                            print("createdAt \(self.photos[i].createdAt)")
+//                            print("welcomeDescription \(self.photos[i].welcomeDescription)")
+//                            print("thumbImageURL  \(self.photos[i].thumbImageURL)")
+//                            print("largeImageURL  \(self.photos[i].largeImageURL)")
+//                            print("isLiked  \(self.photos[i].isLiked)")
+//                            print("")
+//                        }
                     }
                 case .failure(let error):
                     print("[\(self)]: Network Error - \(error)")
