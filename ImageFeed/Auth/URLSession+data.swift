@@ -13,6 +13,7 @@ extension URLSession {
             switch result {
             case .success(let data):
                 do {
+                    //print(String(data: data, encoding: .utf8) ?? "")
                     let responseBody = try JSONDecoder().decode(T.self, from: data)
                     print(">>> JSON SUCCESSFULLY PARSED, \(T.self) STRUCT CREATED")
                     completion(.success(responseBody))

@@ -1,4 +1,9 @@
 import UIKit
+import ProgressHUD
+
+protocol ImagesListCellDelegate: AnyObject {
+    func imageListCellLikeDidTaped(_ cell: ImagesListCell)
+}
 
 final class ImagesListViewController: UIViewController {
 
@@ -27,6 +32,8 @@ final class ImagesListViewController: UIViewController {
                 print("Notification ImagesListService.didChangeNotification")
                 updateTableViewAnimated()
             }
+        
+            
     }
     
     // Вызов при открытии на весь экран
@@ -84,7 +91,9 @@ extension ImagesListViewController: UITableViewDataSource {
             print("Неуспешное привидение типа ячейки. Ошибка создания imageListCell.")
             return UITableViewCell()
         }
+        imagesListCell.delegate = self
         configCell(for: imagesListCell, with: indexPath)
+       
         return imagesListCell
     }
 }
@@ -116,6 +125,37 @@ extension ImagesListViewController: UITableViewDelegate {
             }
     
 }
+
+extension ImagesListViewController: ImagesListCellDelegate {
+    func imageListCellLikeDidTaped(_ cell: ImagesListCell) {
+        print("tap1")
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        let imageId = photos[indexPath.row].id
+        let isLiked = photos[indexPath.row].isLiked
+        
+        UIBlockingProgressHUD.show()
+        
+        imagesListService.changeLike(photoId: imageId, isLiked: isLiked){ result in
+            switch result {
+                case .success:
+                   self.photos = self.imagesListService.photos
+                    cell.setIsLiked(likeState: self.photos[indexPath.row].isLiked)
+                   UIBlockingProgressHUD.dismiss()
+                case .failure:
+                   UIBlockingProgressHUD.dismiss()
+                
+                    let alertResult = UIAlertController(
+                        title: "Что-то пошло не так",
+                        message: "Функционал лайков недоступен.\nПопробуйте позже.",
+                        preferredStyle: .alert)
+                    let action = UIAlertAction(title: "Ok", style: .default)
+                    alertResult.addAction(action)
+                    self.present(alertResult, animated: true, completion: nil)
+            }
+        }
+    }  
+}
+
 
 extension ImagesListViewController {
     

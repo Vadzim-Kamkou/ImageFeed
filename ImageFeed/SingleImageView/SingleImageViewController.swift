@@ -1,5 +1,5 @@
-
 import UIKit
+import ProgressHUD
 
 final class SingleImageViewController: UIViewController {
     var image: UIImage? {
@@ -40,14 +40,15 @@ final class SingleImageViewController: UIViewController {
     
     private func loadLargeImageURL () {
         guard let largeImageURL else {return}
-        imageView.kf.indicatorType = .activity
-        imageView.kf.setImage(with: largeImageURL,
-                              placeholder: UIImage(resource: .downloading)) { result in
+        UIBlockingProgressHUD.show()
+        imageView.kf.setImage(with: largeImageURL) { result in
                                                 switch result {
                                                 case .success(let value):
+                                                    UIBlockingProgressHUD.dismiss()
                                                     self.image = value.image
-                                                case .failure(let error):
-                                                    print(error)
+                                                case .failure(_):
+                                                    UIBlockingProgressHUD.dismiss()
+                                                    self.showError()
                                                 }
                                             }
     }
@@ -74,6 +75,21 @@ final class SingleImageViewController: UIViewController {
         
         scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
     }
+    
+    private func showError() {
+        let alertResult = UIAlertController(
+            title: "Что-то пошло не так",
+            message: "Полноразмерная картинка не загружена.\nПопробовать еще раз?",
+            preferredStyle: .alert)
+        let action_skip = UIAlertAction(title: "Не нужно", style: .default)
+        let action_reload = UIAlertAction(title: "Повторить", style: .cancel) { _ in
+            self.loadLargeImageURL()
+        }
+        alertResult.addAction(action_skip)
+        alertResult.addAction(action_reload)
+        self.present(alertResult, animated: true, completion: nil)
+    }
+    
 }
 
 extension SingleImageViewController: UIScrollViewDelegate {

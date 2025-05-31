@@ -36,7 +36,6 @@ final class ImagesListService {
         //при получении новых фотографий массив photos обновляется из главного потока, новые фото добавляются в конец массива;
         //после обновления значения массива photos публикуется нотификация ImagesListService.DidChangeNotification.
         
-        
         guard let token = storage.token else {
             return
         }
@@ -49,7 +48,6 @@ final class ImagesListService {
             return
         }
         
-
         let task = URLSession.shared.objectTaskArray(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
                 guard let self = self else {return}
                 switch result {
@@ -131,9 +129,86 @@ final class ImagesListService {
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.httpMethod = "GET"
         return request
-     } 
+     }
+    
+    func changeLike(photoId: String, isLiked: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
+        
+        guard let token = storage.token else {
+            return
+        }
+        
+        task?.cancel()
+        lastToken = token
+        
+        guard let request = makeChangeLikeRequest(token: token, photoId: photoId, isLiked: isLiked) else {
+            return
+        }
+        
+        print("makeChangeLikeRequest isLiked 1 =\(isLiked)")
+        
+        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<ChangeLikePhotoResult, Error>) in
+                guard let self = self else {return}
+                switch result {
+                case .success(let photoResult):
+                    
+                    DispatchQueue.main.async {
+                        
+                        let id = photoResult.photo.id ?? ""
+                            let size = CGSize(width: photoResult.photo.width ?? .zero, height: photoResult.photo.height ?? .zero)
+                            let createdAt = photoResult.photo.createdAt ?? ""
+                            let description = photoResult.photo.description ?? ""
+                            let thumbImageURL = photoResult.photo.urls?.thumb ?? ""
+                            let largeImageURL = photoResult.photo.urls?.full ?? ""
+                            let likedByUser = photoResult.photo.likedByUser ?? false
+                            
+                            let photoDescription: Photo = Photo(
+                                id: id,
+                                size: size,
+                                createdAt: createdAt,
+                                welcomeDescription: description,
+                                thumbImageURL: thumbImageURL,
+                                largeImageURL: largeImageURL,
+                                isLiked: likedByUser
+                            )
+                        print("makeChangeLikeRequest isLiked 2 =\(photoDescription.isLiked)")
+                        
+                        // Поиск индекса элемента
+                        if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
+                            // Заменяем элемент в массиве.
+                            self.photos[index] = photoDescription
+                            print("makeChangeLikeRequest isLiked 3 =\(self.photos[index].isLiked)")
+                        }
+                        completion(.success(()))
+                    }
+                case .failure(let error):
+                    print("[\(self)]: Network Error - \(error)")
+                    completion(.failure(error))
+                }
+                self.task = nil
+                self.lastToken = nil
+            }
+        self.task = task
+        task.resume()
+    }
+    
+    private func makeChangeLikeRequest(token: String, photoId: String, isLiked: Bool) -> URLRequest? {
+        
+        guard let baseURL = URL(string: "https://api.unsplash.com") else {
+            return nil
+        }
+        
+        guard let urlForRequest = URL(
+            string: "/photos/"
+            + "\(photoId)/"
+            + "like",
+            relativeTo: baseURL
+        ) else {
+            return nil
+        }
+
+        var request = URLRequest(url: urlForRequest)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.httpMethod = isLiked ? "DELETE" : "POST"
+        return request
+    }
 }
-    
-    
-
-
