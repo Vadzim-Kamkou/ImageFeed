@@ -12,14 +12,12 @@ final class ImagesListCell: UITableViewCell {
     
     
     @IBAction func tapLikeButton(_ sender: Any) {
-        print("tap")
         self.delegate?.imageListCellLikeDidTaped(self)
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        // Отменяем загрузку, чтобы избежать багов при переиспользовании ячеек
         cellImage.kf.cancelDownloadTask()
     }
     

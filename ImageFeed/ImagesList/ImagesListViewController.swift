@@ -12,6 +12,9 @@ final class ImagesListViewController: UIViewController {
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     private var photos: [Photo] = []
     let imagesListService = ImagesListService.shared
+    
+    let isoDateFormatter = ISO8601DateFormatter()
+    let displayFormatter = DateFormatter()
    
     
     private var imagesListServiceObserver: NSObjectProtocol?
@@ -21,7 +24,6 @@ final class ImagesListViewController: UIViewController {
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
         imagesListService.fetchPhotosNextPage()
         
-        // После получения этой нотификации происходит обновление ленты
         imagesListServiceObserver = NotificationCenter.default
             .addObserver(
                 forName: ImagesListService.didChangeNotification,
@@ -29,14 +31,10 @@ final class ImagesListViewController: UIViewController {
                 queue: .main
             ) { [weak self] _ in
                 guard let self = self else { return }
-                print("Notification ImagesListService.didChangeNotification")
                 updateTableViewAnimated()
             }
-        
-            
     }
     
-    // Вызов при открытии на весь экран
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == showSingleImageSegueIdentifier {
@@ -47,7 +45,6 @@ final class ImagesListViewController: UIViewController {
                 return
             }
             
-            // определяем название фотки, которую нужно подставить
             guard let largeImageURL = URL(string: photo(at: indexPath.row).largeImageURL) else {
                 return
             }
@@ -62,7 +59,6 @@ final class ImagesListViewController: UIViewController {
         
         let oldCount = photos.count
         let newCount = imagesListService.photos.count
-        print("updateTableViewAnimated Old= \(oldCount) New= \(newCount)")
         photos = imagesListService.photos
         if oldCount != newCount {
             tableView.performBatchUpdates {
@@ -79,16 +75,13 @@ final class ImagesListViewController: UIViewController {
 extension ImagesListViewController: UITableViewDataSource {
     // определяем количество ячеек в секции, через размер массива с фото
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("1 func tableView numberOfRowsInSection \(photos.count) \(section)")
         return photos.count
     }
     // подготавливаем ячейки к реиспользованию
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        print("2 func tableView cellForRowAt \(indexPath.row)")
         let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier, for: indexPath)
         
         guard let imagesListCell = cell as? ImagesListCell else {
-            print("Неуспешное привидение типа ячейки. Ошибка создания imageListCell.")
             return UITableViewCell()
         }
         imagesListCell.delegate = self
@@ -104,7 +97,6 @@ extension ImagesListViewController: UITableViewDelegate {
         // проверяем есть ли такая картинка, если нет выходим
         let image = photos[indexPath.row]
 
-        print("3 func tableView heightForRowAt \(indexPath.row)")
         // определяем ширину и высоту ячейки учитывая размеры фото
         let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
         let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
@@ -116,19 +108,16 @@ extension ImagesListViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("func tableView didSelectRowAt \(indexPath.row)")
         performSegue(withIdentifier: "ShowSingleImage", sender: indexPath)
     }
     
     func photo(at index: Int) -> Photo {
-                return photos[index]
-            }
-    
+        return photos[index]
+    }
 }
 
 extension ImagesListViewController: ImagesListCellDelegate {
     func imageListCellLikeDidTaped(_ cell: ImagesListCell) {
-        print("tap1")
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         let imageId = photos[indexPath.row].id
         let isLiked = photos[indexPath.row].isLiked
@@ -161,10 +150,8 @@ extension ImagesListViewController {
     
     // настраиваем ячейку: дата (какая дата?) и лайк, если он есть.
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        print("4 func configCell \(indexPath.row)")
         tableView(self.tableView, willDisplay: cell, forRowAt: indexPath)
               
-   
         if imagesListService.photos.count == 0 {
             return
         }
@@ -188,13 +175,10 @@ extension ImagesListViewController {
                                                       
                                                      // выводим дату
                                                       let createdAt = self.photos[indexPath.row].createdAt
-                                                      let isoDateFormatter = ISO8601DateFormatter()
-                                                     
-                                                      if let date = isoDateFormatter.date(from: createdAt){
-                                                          let displayFormatter = DateFormatter()
-                                                          displayFormatter.locale = Locale(identifier: "ru_RU")
-                                                          displayFormatter.dateFormat = "d MMMM yyyy"
-                                                          cell.dateLabel.text = displayFormatter.string(from: date)
+                                                      if let date = self.isoDateFormatter.date(from: createdAt){
+                                                          self.displayFormatter.locale = Locale(identifier: "ru_RU")
+                                                          self.displayFormatter.dateFormat = "d MMMM yyyy"
+                                                          cell.dateLabel.text = self.displayFormatter.string(from: date)
                                                       } else {
                                                           cell.dateLabel.text = ""
                                                       }
@@ -214,4 +198,3 @@ extension ImagesListViewController {
         }
     }
 }
-

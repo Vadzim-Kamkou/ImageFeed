@@ -25,16 +25,8 @@ final class ImagesListService {
     private var lastLoadedPage: Int?
     static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
   
-    
-    
-    
-    
     //MARK: Functions
     func fetchPhotosNextPage() {
-        // функция внутри себя определяет номер следующей страницы для закачки (номер не должен сообщаться извне, как параметр функции);
-        //если идёт закачка, то нового сетевого запроса не создаётся, а выполнение функции прерывается;
-        //при получении новых фотографий массив photos обновляется из главного потока, новые фото добавляются в конец массива;
-        //после обновления значения массива photos публикуется нотификация ImagesListService.DidChangeNotification.
         
         guard let token = storage.token else {
             return
@@ -44,7 +36,6 @@ final class ImagesListService {
         
         let nextPage = (lastLoadedPage ?? 0) + 1
         guard let request = makePhotoRequest(token: token, nextPage: nextPage) else {
-            //completion(.failure(AuthServiceError.invalidRequest))
             return
         }
         
@@ -85,29 +76,20 @@ final class ImagesListService {
                             .post(
                                 name: ImagesListService.didChangeNotification,
                                 object: self)
-
-                        // для отладки
-//                        for i in 0...self.photos.count - 1 {
-//                            print("Photo \(i+1) id = \(self.photos[i].id)")
-//                            print()
-//                            print("size \(self.photos[i].size)")
-//                            print("createdAt \(self.photos[i].createdAt)")
-//                            print("welcomeDescription \(self.photos[i].welcomeDescription)")
-//                            print("thumbImageURL  \(self.photos[i].thumbImageURL)")
-//                            print("largeImageURL  \(self.photos[i].largeImageURL)")
-//                            print("isLiked  \(self.photos[i].isLiked)")
-//                            print("")
-//                        }
                     }
                 case .failure(let error):
                     print("[\(self)]: Network Error - \(error)")
-                    //completion(.failure(error))
                 }
                 self.task = nil
                 self.lastToken = nil
             }
         self.task = task
         task.resume()
+    }
+    
+    func clearPhotos() {
+        self.photos.removeAll()
+        lastLoadedPage = 0
     }
     
     private func makePhotoRequest(token: String, nextPage: Int) -> URLRequest? {
@@ -144,8 +126,6 @@ final class ImagesListService {
             return
         }
         
-        print("makeChangeLikeRequest isLiked 1 =\(isLiked)")
-        
         let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<ChangeLikePhotoResult, Error>) in
                 guard let self = self else {return}
                 switch result {
@@ -170,13 +150,10 @@ final class ImagesListService {
                                 largeImageURL: largeImageURL,
                                 isLiked: likedByUser
                             )
-                        print("makeChangeLikeRequest isLiked 2 =\(photoDescription.isLiked)")
                         
                         // Поиск индекса элемента
                         if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
-                            // Заменяем элемент в массиве.
                             self.photos[index] = photoDescription
-                            print("makeChangeLikeRequest isLiked 3 =\(self.photos[index].isLiked)")
                         }
                         completion(.success(()))
                     }

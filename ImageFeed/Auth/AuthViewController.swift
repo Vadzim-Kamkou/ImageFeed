@@ -31,8 +31,6 @@ final class AuthViewController: UIViewController {
                 return
             }
             webViewViewController.delegate = self
-//            print("?")
-//            print(webViewViewController.delegate = self)
         } else {
             super.prepare(for: segue, sender: sender)
         }
@@ -74,4 +72,3 @@ extension AuthViewController: WebViewViewControllerDelegate {
         self.present(alertResult, animated: true, completion: nil)
     }
 }
-
