@@ -44,8 +44,6 @@ final class  ProfileViewController: UIViewController {
     }
     
     private func updateAvatar() {
-        print("updateAvatar")
-        print("profileImageURL = \(String(describing: ProfileImageService.shared.avatarURL))")
         guard
            let profileImageURL = ProfileImageService.shared.avatarURL,
            let url = URL(string: profileImageURL)
