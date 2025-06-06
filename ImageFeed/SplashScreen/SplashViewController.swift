@@ -28,7 +28,7 @@ final class SplashViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        guard  let token = storage.token else {
+        guard  let token = storage.token  else {
             let storyboard = UIStoryboard(name: "Main", bundle: .main)
             guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {return}
             authViewController.delegate = self

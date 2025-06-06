@@ -27,9 +27,7 @@ final class ProfileService {
     private var lastToken: String?
     
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void)  {
-
         assert(Thread.isMainThread)
-
         guard lastToken != token else {
             completion(.failure(AuthServiceError.invalidRequest))
             return
@@ -70,7 +68,6 @@ final class ProfileService {
                     guard let profile = self.profile else {
                         return
                     }
-                    
                     completion(.success(profile))
 
                 case .failure(let error):
@@ -83,6 +80,13 @@ final class ProfileService {
         }
         self.task = task
         task.resume()
+    }
+    
+    func clearProfileData() {
+        self.profile?.username = "username"
+        self.profile?.name = "name"
+        self.profile?.loginName = "@loginName"
+        self.profile?.bio = "bio"
     }
     
     private func makeAutorizationRequest(token: String) -> URLRequest? {

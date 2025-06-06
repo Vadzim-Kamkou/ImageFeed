@@ -44,11 +44,12 @@ final class  ProfileViewController: UIViewController {
     }
     
     private func updateAvatar() {
-        
         guard
            let profileImageURL = ProfileImageService.shared.avatarURL,
            let url = URL(string: profileImageURL)
-        else { return }
+        else {
+            print ("return")
+            return }
         
         let cache = ImageCache.default
         cache.clearMemoryCache()
@@ -62,8 +63,8 @@ final class  ProfileViewController: UIViewController {
                                                 .processor(processor)
                                               ]){ result in
                                                   switch result {
-                                                  case .success(let value):
-                                                      print("profileImage Added\(value)")
+                                                  case .success(_):
+                                                      print("profileImage Added")
                                                   case .failure(let error):
                                                       print(error)
                                                   }
@@ -71,10 +72,10 @@ final class  ProfileViewController: UIViewController {
     }
     
     private func configProfile() {
-        
+    
         view.backgroundColor = UIColor.ypBlack
         
-        let profileImage = UIImage(named: "Userpick")
+        let profileImage = UIImage(resource: .userpick)
         let imageView = UIImageView(image: profileImage)
         
         imageView.tintColor = .gray
@@ -130,8 +131,26 @@ final class  ProfileViewController: UIViewController {
     
     @IBAction func didTapLogoutButton() {
         
-        userFullName?.text = "Name"
-        userAccount?.text = ""
-        userDescription?.text = ""
+        let alertResult = UIAlertController(
+            title: "Пока, пока!",
+            message: "Уверены, что хотите выйти?",
+            preferredStyle: .alert)
+        let action_skip = UIAlertAction(title: "Нет", style: .cancel )
+        let action_logout = UIAlertAction(title: "Да", style: .default) { _ in
+            ProfileLogoutService.shared.logout()
+            self.navigateToSplashScreen()
+        }
+        alertResult.addAction(action_skip)
+        alertResult.addAction(action_logout)
+        self.present(alertResult, animated: true, completion: nil)
+    }
+    
+    func navigateToSplashScreen() {
+        let splashViewController = SplashViewController()
+        guard let window = UIApplication.shared.windows.first else {
+            fatalError("splashViewController отсутствует для перехода")
+        }
+        window.rootViewController = splashViewController
+        window.makeKeyAndVisible()
     }
 }

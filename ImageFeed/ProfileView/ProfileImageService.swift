@@ -29,7 +29,6 @@ final class ProfileImageService {
     
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
 
-    
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
        
         assert(Thread.isMainThread)
@@ -42,20 +41,20 @@ final class ProfileImageService {
 
         task?.cancel()
         lastToken = token
-        
-       
-        
+
         guard let request = makeAutorizationRequest(token: token, username: username) else {
             completion(.failure(AuthServiceError.invalidRequest))
             return
         }
 
         let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
+            
+            
             DispatchQueue.main.async {
                 guard let self = self else {return}
                 switch result {
                 case .success(let userResult):
-                    
+
                     guard let profileImageURL: String = userResult.profileImages?.small else {
                         return
                     }
@@ -78,7 +77,10 @@ final class ProfileImageService {
         }
         self.task = task
         task.resume()
-
+    }
+    
+    func clearProfileImageData() {
+        self.avatarURL = ""
     }
     
     private func makeAutorizationRequest(token: String, username: String) -> URLRequest? {
