@@ -11,7 +11,7 @@ final class ImagesListCell: UITableViewCell {
     weak var delegate: ImagesListCellDelegate?
     
     
-    @IBAction func tapLikeButton(_ sender: Any) {
+    @IBAction private func tapLikeButton(_ sender: Any) {
         self.delegate?.imageListCellLikeDidTaped(self)
     }
     

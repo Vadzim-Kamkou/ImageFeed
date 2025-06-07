@@ -1,12 +1,11 @@
 import UIKit
-import ProgressHUD
 
 protocol ImagesListCellDelegate: AnyObject {
     func imageListCellLikeDidTaped(_ cell: ImagesListCell)
 }
 
 final class ImagesListViewController: UIViewController {
-
+    
     @IBOutlet private var tableView: UITableView!
     
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
@@ -15,7 +14,7 @@ final class ImagesListViewController: UIViewController {
     
     let isoDateFormatter = ISO8601DateFormatter()
     let displayFormatter = DateFormatter()
-   
+    
     
     private var imagesListServiceObserver: NSObjectProtocol?
     
@@ -86,17 +85,17 @@ extension ImagesListViewController: UITableViewDataSource {
         }
         imagesListCell.delegate = self
         configCell(for: imagesListCell, with: indexPath)
-       
+        
         return imagesListCell
     }
 }
 
 extension ImagesListViewController: UITableViewDelegate {
-   // определение высоты ячейки
+    // определение высоты ячейки
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         // проверяем есть ли такая картинка, если нет выходим
         let image = photos[indexPath.row]
-
+        
         // определяем ширину и высоту ячейки учитывая размеры фото
         let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
         let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
@@ -126,23 +125,23 @@ extension ImagesListViewController: ImagesListCellDelegate {
         
         imagesListService.changeLike(photoId: imageId, isLiked: isLiked){ result in
             switch result {
-                case .success:
-                   self.photos = self.imagesListService.photos
-                    cell.setIsLiked(likeState: self.photos[indexPath.row].isLiked)
-                   UIBlockingProgressHUD.dismiss()
-                case .failure:
-                   UIBlockingProgressHUD.dismiss()
+            case .success:
+                self.photos = self.imagesListService.photos
+                cell.setIsLiked(likeState: self.photos[indexPath.row].isLiked)
+                UIBlockingProgressHUD.dismiss()
+            case .failure:
+                UIBlockingProgressHUD.dismiss()
                 
-                    let alertResult = UIAlertController(
-                        title: "Что-то пошло не так",
-                        message: "Функционал лайков недоступен.\nПопробуйте позже.",
-                        preferredStyle: .alert)
-                    let action = UIAlertAction(title: "Ok", style: .default)
-                    alertResult.addAction(action)
-                    self.present(alertResult, animated: true, completion: nil)
+                let alertResult = UIAlertController(
+                    title: "Что-то пошло не так",
+                    message: "Функционал лайков недоступен.\nПопробуйте позже.",
+                    preferredStyle: .alert)
+                let action = UIAlertAction(title: "Ok", style: .default)
+                alertResult.addAction(action)
+                self.present(alertResult, animated: true, completion: nil)
             }
         }
-    }  
+    }
 }
 
 
@@ -151,7 +150,7 @@ extension ImagesListViewController {
     // настраиваем ячейку: дата (какая дата?) и лайк, если он есть.
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         tableView(self.tableView, willDisplay: cell, forRowAt: indexPath)
-              
+        
         if imagesListService.photos.count == 0 {
             return
         }
@@ -162,34 +161,34 @@ extension ImagesListViewController {
         cell.cellImage.kf.indicatorType = .activity
         cell.cellImage.kf.setImage(with: url,
                                    placeholder: UIImage(resource: .downloading)) { result in
-                                                  switch result {
-                                                  case .success(let value):
-                                                      
-                                                      // подставляем картинку, однако работает и явного присваивания
-                                                      cell.cellImage.image = value.image
-                                                      
-                                                      // подставляем лайк
-                                                      let isLiked = self.photos[indexPath.row].isLiked
-                                                      let likeImage = isLiked ? UIImage(named: "Active") : UIImage(named: "NoActive")
-                                                      cell.likeButton.setImage(likeImage, for: .normal)
-                                                      
-                                                     // выводим дату
-                                                      let createdAt = self.photos[indexPath.row].createdAt
-                                                      if let date = self.isoDateFormatter.date(from: createdAt){
-                                                          self.displayFormatter.locale = Locale(identifier: "ru_RU")
-                                                          self.displayFormatter.dateFormat = "d MMMM yyyy"
-                                                          cell.dateLabel.text = self.displayFormatter.string(from: date)
-                                                      } else {
-                                                          cell.dateLabel.text = ""
-                                                      }
-
-                                                      self.tableView.reloadRows(at: [indexPath], with: .automatic)
-                                                      
-                                                  case .failure(let error):
-                                                      print(error)
-                                                  }
-                                              }
-  
+            switch result {
+            case .success(let value):
+                
+                // подставляем картинку, однако работает и явного присваивания
+                cell.cellImage.image = value.image
+                
+                // подставляем лайк
+                let isLiked = self.photos[indexPath.row].isLiked
+                let likeImage = isLiked ? UIImage(named: "Active") : UIImage(named: "NoActive")
+                cell.likeButton.setImage(likeImage, for: .normal)
+                
+                // выводим дату
+                let createdAt = self.photos[indexPath.row].createdAt
+                if let date = self.isoDateFormatter.date(from: createdAt){
+                    self.displayFormatter.locale = Locale(identifier: "ru_RU")
+                    self.displayFormatter.dateFormat = "d MMMM yyyy"
+                    cell.dateLabel.text = self.displayFormatter.string(from: date)
+                } else {
+                    cell.dateLabel.text = ""
+                }
+                
+                self.tableView.reloadRows(at: [indexPath], with: .automatic)
+                
+            case .failure(let error):
+                print(error)
+            }
+        }
+        
     }
     // если подошли подошли к концу ленты - догружаем фотографии
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {

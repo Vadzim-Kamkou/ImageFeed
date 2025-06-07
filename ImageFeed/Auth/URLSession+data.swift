@@ -73,16 +73,5 @@ extension URLSession {
             }
         }
         return task
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    }  
 }
