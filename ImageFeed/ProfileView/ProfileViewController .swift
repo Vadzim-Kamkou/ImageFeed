@@ -123,6 +123,7 @@ final class  ProfileViewController: UIViewController {
             target: self,
             action: #selector(self.didTapLogoutButton)
         )
+        buttonLogout.accessibilityIdentifier = "logoutButton"
         buttonLogout.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(buttonLogout)
         buttonLogout.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20).isActive = true

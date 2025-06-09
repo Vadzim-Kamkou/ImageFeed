@@ -33,6 +33,9 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="lBb-xO-nfX"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <accessibility key="accessibilityConfiguration">
+                            <bool key="isElement" value="YES"/>
+                        </accessibility>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="qW5-og-cX1" secondAttribute="bottom" id="28n-fb-tzd"/>
                             <constraint firstItem="EvA-Ra-QBk" firstAttribute="trailing" secondItem="lBb-xO-nfX" secondAttribute="trailing" id="7RM-or-a5r"/>
@@ -67,6 +70,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RfJ-Uo-BEZ">
                                 <rect key="frame" x="16" y="743" width="361" height="48"/>
                                 <color key="backgroundColor" name="YP White"/>
+                                <accessibility key="accessibilityConfiguration" identifier="Authenticate"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="48" id="Edg-eF-jjy"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="343" id="v5t-2L-a56"/>
@@ -262,6 +266,7 @@
                             </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WWR-H5-MsJ">
                                 <rect key="frame" x="9" y="8" width="48" height="48"/>
+                                <accessibility key="accessibilityConfiguration" identifier="SingleViewBackButton"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="fbq-dj-otU"/>
                                     <constraint firstAttribute="width" constant="48" id="m5b-Bs-aQ9"/>
