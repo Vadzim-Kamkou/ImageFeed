@@ -87,6 +87,7 @@
 		0DA503AF2DF47EBD009C4886 /* AuthHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthHelper.swift; sourceTree = "<group>"; };
 		0DA503B52DF4814A009C4886 /* ImageFeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ImageFeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0DA503CD2DF4AA45009C4886 /* ImageFeedUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ImageFeedUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0DA504102DF6EBD7009C4886 /* ImageFeed.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ImageFeed.xctestplan; sourceTree = "<group>"; };
 		0DB16E0D2DA060E80014A0AF /* OAuthTokenResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthTokenResponseModel.swift; sourceTree = "<group>"; };
 		0DC61B7A2D96BFFC00F205F4 /* OAuth2Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2Service.swift; sourceTree = "<group>"; };
 		0DE35D2F2D71D7F000CCA4E9 /* ProfileViewController .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProfileViewController .swift"; sourceTree = "<group>"; };
@@ -147,6 +148,7 @@
 		0D2789432D674E6A00B6DC6B = {
 			isa = PBXGroup;
 			children = (
+				0DA504102DF6EBD7009C4886 /* ImageFeed.xctestplan */,
 				0D27894E2D674E6A00B6DC6B /* ImageFeed */,
 				0DA503B62DF4814A009C4886 /* ImageFeedTests */,
 				0DA503CE2DF4AA45009C4886 /* ImageFeedUITests */,
