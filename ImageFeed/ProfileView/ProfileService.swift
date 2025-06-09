@@ -1,5 +1,9 @@
 import Foundation
 
+protocol ProfileProviding {
+    var profile: Profile? { get }
+}
+
 struct Profile {
     
     var username: String
@@ -15,7 +19,7 @@ struct Profile {
     }
 }
 
-final class ProfileService {
+final class ProfileService: ProfileProviding {
     
     static let shared = ProfileService()
     private init() {}

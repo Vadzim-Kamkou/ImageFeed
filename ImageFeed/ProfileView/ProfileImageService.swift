@@ -1,5 +1,9 @@
 import Foundation
 
+protocol ProfileImageProviding {
+    var avatarURL: String? { get }
+}
+
 struct UserResult: Codable {
     let profileImages: ProfileImage?
 
@@ -17,7 +21,7 @@ struct ProfileImage: Codable {
     
 }
 
-final class ProfileImageService {
+final class ProfileImageService: ProfileImageProviding {
     
     static let shared = ProfileImageService()
     private init() {}
@@ -48,7 +52,6 @@ final class ProfileImageService {
         }
 
         let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
-            
             
             DispatchQueue.main.async {
                 guard let self = self else {return}
