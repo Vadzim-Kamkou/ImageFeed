@@ -1,37 +1,87 @@
 import UIKit
 
+protocol ImagesListCellProtocol: AnyObject {
+    var delegate: ImagesListCellDelegate? { get set }
+    func configure(with viewModel: ImageCellViewModel)
+    func setIsLiked(likeState: Bool)
+}
+
 protocol ImagesListCellDelegate: AnyObject {
-    func imageListCellLikeDidTaped(_ cell: ImagesListCell)
+    func imageListCellLikeDidTaped(_ cell: ImagesListCellProtocol)
+}
+
+protocol PhotoProvider: AnyObject {
+    func photo(at index: Int) -> Photo
 }
 
 final class ImagesListViewController: UIViewController {
     
-    @IBOutlet private var tableView: UITableView!
+    @IBOutlet var tableView: UITableView!
     
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     private var photos: [Photo] = []
-    let imagesListService = ImagesListService.shared
+    var imagesListService: ImagesListServiceProtocol
+    var imagesListServiceObserver: ImagesListServiceObserver?
     
-    let isoDateFormatter = ISO8601DateFormatter()
-    let displayFormatter = DateFormatter()
+    private let isoDateFormatter: DateFormatting
+    private let displayFormatter: DateFormatting
     
+    private let viewModelFactory: ImageCellViewModelFactory
     
-    private var imagesListServiceObserver: NSObjectProtocol?
+    private var photosCount: Int {
+        photos.count
+    }
+    
+    private let likeService: LikeService
+    
+    private lazy var likeHandler: ImageLikeHandler = {
+        return ImageLikeHandler(likeService: likeService)
+    }()
+    
+
+    init(
+        imagesListService: ImagesListServiceProtocol = ImagesListService.shared,
+        likeService: LikeService = ImagesListService.shared,
+        isoDateFormatter: DateFormatting = ISO8601DateFormatterWrapper(),
+        displayFormatter: DateFormatting = DisplayDateFormatter(localeIdentifier: "ru_RU", dateFormat: "d MMMM yyyy"),
+        viewModelFactory: ImageCellViewModelFactory? = nil
+    ) {
+        self.imagesListService = imagesListService
+        self.likeService = likeService
+        self.isoDateFormatter = isoDateFormatter
+        self.displayFormatter = displayFormatter
+        
+        
+        let resolvedFactory = viewModelFactory ?? DefaultImageCellViewModelFactory(
+                isoDateFormatter: isoDateFormatter,
+                displayFormatter: displayFormatter
+            )
+        self.viewModelFactory = resolvedFactory
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        self.imagesListService = ImagesListService.shared
+        self.likeService = ImagesListService.shared
+        self.isoDateFormatter = ISO8601DateFormatterWrapper()
+        self.displayFormatter = DisplayDateFormatter(localeIdentifier: "ru_RU", dateFormat: "d MMMM yyyy")
+        self.viewModelFactory = DefaultImageCellViewModelFactory(
+                isoDateFormatter: isoDateFormatter,
+                displayFormatter: displayFormatter
+            )
+        super.init(coder: coder)
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        guard let tableView = tableView else { return }
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
         imagesListService.fetchPhotosNextPage()
         
-        imagesListServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ImagesListService.didChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                guard let self = self else { return }
-                updateTableViewAnimated()
-            }
+        imagesListServiceObserver = ImagesListServiceObserver()
+        imagesListServiceObserver?.delegate = self
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -54,18 +104,31 @@ final class ImagesListViewController: UIViewController {
         }
     }
     
-    private func updateTableViewAnimated() {
-        
-        let oldCount = photos.count
-        let newCount = imagesListService.photos.count
+    func updatePhotos() {
         photos = imagesListService.photos
-        if oldCount != newCount {
-            tableView.performBatchUpdates {
-                let indexPaths = (oldCount..<newCount).map { i in
-                    IndexPath(row: i, section: 0)
-                }
-                tableView.insertRows(at: indexPaths, with: .automatic)
-            } completion: { _ in }
+    }
+    private func updateTableViewAnimated(oldCount: Int, newCount: Int) {
+        guard oldCount != newCount else { return }
+        let indexPaths = (oldCount..<newCount).map { IndexPath(row: $0, section: 0) }
+        tableView.performBatchUpdates {
+            tableView.insertRows(at: indexPaths, with: .automatic)
+        }
+    }
+    
+    // настраиваем ячейку: дата (какая дата?) и лайк, если он есть.
+    func configCell(for cell: ImagesListCellProtocol, with indexPath: IndexPath) {
+        let photo = self.photo(at: indexPath.row)
+        let viewModel = viewModelFactory.makeViewModel(from: photo)
+        cell.configure(with: viewModel)
+        
+        // Подгрузка следующей страницы (оставим здесь)
+        tableView(self.tableView, willDisplay: cell as! UITableViewCell, forRowAt: indexPath)
+    }
+
+    // если подошли подошли к концу ленты - догружаем фотографии
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row + 1 == imagesListService.photos.count {
+            imagesListService.fetchPhotosNextPage()
         }
     }
 }
@@ -109,91 +172,63 @@ extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "ShowSingleImage", sender: indexPath)
     }
-    
+}
+
+extension ImagesListViewController: ImagesListCellDelegate {
+    func imageListCellLikeDidTaped(_ cell: ImagesListCellProtocol) {
+        guard let indexPath = tableView.indexPath(for: cell as! UITableViewCell) else { return }
+        let photo = photos[indexPath.row]
+        likeHandler.toggleLike(for: photo) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let updatedPhoto):
+                    self?.photos[indexPath.row] = updatedPhoto
+                    cell.setIsLiked(likeState: updatedPhoto.isLiked)
+                case .failure:
+                    let alert = UIAlertController(
+                        title: "Ошибка",
+                        message: "Не удалось обновить лайк. Попробуйте позже.",
+                        preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default))
+                    self?.present(alert, animated: true)
+                }
+            }
+        }
+    }
+}
+
+extension ImagesListViewController: ImagesListServiceObserverDelegate {
+    func didUpdatePhotos() {
+        let oldCount = photos.count
+        updatePhotos()
+        let newCount = photos.count
+        updateTableViewAnimated(oldCount: oldCount, newCount: newCount)
+    }
+}
+
+extension ImagesListViewController: PhotoProvider {
     func photo(at index: Int) -> Photo {
         return photos[index]
     }
 }
 
-extension ImagesListViewController: ImagesListCellDelegate {
-    func imageListCellLikeDidTaped(_ cell: ImagesListCell) {
-        guard let indexPath = tableView.indexPath(for: cell) else { return }
-        let imageId = photos[indexPath.row].id
-        let isLiked = photos[indexPath.row].isLiked
-        
-        UIBlockingProgressHUD.show()
-        
-        imagesListService.changeLike(photoId: imageId, isLiked: isLiked){ result in
-            switch result {
-            case .success:
-                self.photos = self.imagesListService.photos
-                cell.setIsLiked(likeState: self.photos[indexPath.row].isLiked)
-                UIBlockingProgressHUD.dismiss()
-            case .failure:
-                UIBlockingProgressHUD.dismiss()
-                
-                let alertResult = UIAlertController(
-                    title: "Что-то пошло не так",
-                    message: "Функционал лайков недоступен.\nПопробуйте позже.",
-                    preferredStyle: .alert)
-                let action = UIAlertAction(title: "Ok", style: .default)
-                alertResult.addAction(action)
-                self.present(alertResult, animated: true, completion: nil)
-            }
-        }
+extension ImagesListViewController: ImageLikeHandlerDelegate {
+    func didUpdateLikeState(to isLiked: Bool, for cell: ImagesListCellProtocol) {
+        guard let tableViewCell = cell as? UITableViewCell,
+              tableView.indexPath(for: tableViewCell) != nil else { return }
+        self.photos = self.imagesListService.photos
+        cell.setIsLiked(likeState: isLiked)
+    }
+
+    func didFailToUpdateLike(for cell: ImagesListCellProtocol) {
+        let alertResult = UIAlertController(
+            title: "Что-то пошло не так",
+            message: "Функционал лайков недоступен.\nПопробуйте позже.",
+            preferredStyle: .alert
+        )
+        let action = UIAlertAction(title: "Ok", style: .default)
+        alertResult.addAction(action)
+        self.present(alertResult, animated: true)
     }
 }
 
-
-extension ImagesListViewController {
-    
-    // настраиваем ячейку: дата (какая дата?) и лайк, если он есть.
-    func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
-        tableView(self.tableView, willDisplay: cell, forRowAt: indexPath)
-        
-        if imagesListService.photos.count == 0 {
-            return
-        }
-        
-        guard let url = URL(string: photos[indexPath.row].thumbImageURL) else {
-            return
-        }
-        cell.cellImage.kf.indicatorType = .activity
-        cell.cellImage.kf.setImage(with: url,
-                                   placeholder: UIImage(resource: .downloading)) { result in
-            switch result {
-            case .success(let value):
-                
-                // подставляем картинку, однако работает и явного присваивания
-                cell.cellImage.image = value.image
-                
-                // подставляем лайк
-                let isLiked = self.photos[indexPath.row].isLiked
-                let likeImage = isLiked ? UIImage(named: "Active") : UIImage(named: "NoActive")
-                cell.likeButton.setImage(likeImage, for: .normal)
-                
-                // выводим дату
-                let createdAt = self.photos[indexPath.row].createdAt
-                if let date = self.isoDateFormatter.date(from: createdAt){
-                    self.displayFormatter.locale = Locale(identifier: "ru_RU")
-                    self.displayFormatter.dateFormat = "d MMMM yyyy"
-                    cell.dateLabel.text = self.displayFormatter.string(from: date)
-                } else {
-                    cell.dateLabel.text = ""
-                }
-                
-                self.tableView.reloadRows(at: [indexPath], with: .automatic)
-                
-            case .failure(let error):
-                print(error)
-            }
-        }
-        
-    }
-    // если подошли подошли к концу ленты - догружаем фотографии
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row + 1 == imagesListService.photos.count {
-            imagesListService.fetchPhotosNextPage()
-        }
-    }
-}
