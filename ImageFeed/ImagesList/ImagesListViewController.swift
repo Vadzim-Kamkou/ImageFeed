@@ -35,10 +35,9 @@ final class ImagesListViewController: UIViewController {
     private let likeService: LikeService
     
     private lazy var likeHandler: ImageLikeHandler = {
-        return ImageLikeHandler(likeService: likeService)
+        ImageLikeHandler(likeService: likeService)
     }()
     
-
     init(
         imagesListService: ImagesListServiceProtocol = ImagesListService.shared,
         likeService: LikeService = ImagesListService.shared,
@@ -50,7 +49,6 @@ final class ImagesListViewController: UIViewController {
         self.likeService = likeService
         self.isoDateFormatter = isoDateFormatter
         self.displayFormatter = displayFormatter
-        
         
         let resolvedFactory = viewModelFactory ?? DefaultImageCellViewModelFactory(
                 isoDateFormatter: isoDateFormatter,
@@ -72,7 +70,6 @@ final class ImagesListViewController: UIViewController {
             )
         super.init(coder: coder)
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
