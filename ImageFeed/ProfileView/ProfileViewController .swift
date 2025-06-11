@@ -1,12 +1,17 @@
 import UIKit
 import Kingfisher
 
-final class  ProfileViewController: UIViewController {
+class  ProfileViewController: UIViewController {
     
-    private var userFullName: UILabel?
-    private var userAccount: UILabel?
-    private var userDescription: UILabel?
-    private var userAvatarImageView: UIImageView?
+    var application: ApplicationProtocol = UIApplication.shared
+    var profileService: ProfileProviding = ProfileService.shared
+    var profileImageService: ProfileImageProviding = ProfileImageService.shared
+    var notificationCenter: NotificationCenterObserving = NotificationCenter.default
+    
+    var userFullName: UILabel?
+    var userAccount: UILabel?
+    var userDescription: UILabel?
+    var userAvatarImageView: UIImageView?
     
     private var profileImageServiceObserver: NSObjectProtocol?
     
@@ -26,8 +31,28 @@ final class  ProfileViewController: UIViewController {
             }
         updateAvatar()
         
-        guard let profile = ProfileService.shared.profile else {return}
-        updateProfileDetails(profile: profile)
+        if let profile = profileService.profile {
+            configureLabels(with: profile)
+        }
+    }
+    
+    func configureLabels(with profile: Profile) {
+         userFullName?.text = profile.name
+         userAccount?.text = profile.loginName
+         userDescription?.text = profile.bio
+     }
+    
+    func updateAvatar() {
+        guard
+            let urlString = profileImageService.avatarURL,
+            let url = URL(string: urlString)
+        else { return }
+        
+        let processor = RoundCornerImageProcessor(cornerRadius: 70)
+        userAvatarImageView?.kf.indicatorType = .activity
+        userAvatarImageView?.kf.setImage(with: url, options: [.processor(processor),
+                                                              .cacheOriginalImage,
+                                                              .forceRefresh])
     }
     
     private func updateProfileDetails(profile: Profile) {
@@ -42,35 +67,7 @@ final class  ProfileViewController: UIViewController {
         userAccount?.text = loginName
         userDescription?.text = bio
     }
-    
-    private func updateAvatar() {
-        guard
-           let profileImageURL = ProfileImageService.shared.avatarURL,
-           let url = URL(string: profileImageURL)
-        else {
-            print ("return")
-            return }
-        
-        let cache = ImageCache.default
-        cache.clearMemoryCache()
-        cache.clearDiskCache()
-        
-        let processor = RoundCornerImageProcessor(cornerRadius: 70)
-        self.userAvatarImageView?.kf.indicatorType = .activity
-        self.userAvatarImageView?.kf.setImage(with: url,
-                                              //placeholder: UIImage(named: "Userpick"),
-                                              options: [
-                                                .processor(processor)
-                                              ]){ result in
-                                                  switch result {
-                                                  case .success(_):
-                                                      print("profileImage Added")
-                                                  case .failure(let error):
-                                                      print(error)
-                                                  }
-                                              }
-    }
-    
+      
     private func configProfile() {
     
         view.backgroundColor = UIColor.ypBlack
@@ -123,6 +120,7 @@ final class  ProfileViewController: UIViewController {
             target: self,
             action: #selector(self.didTapLogoutButton)
         )
+        buttonLogout.accessibilityIdentifier = "logoutButton"
         buttonLogout.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(buttonLogout)
         buttonLogout.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20).isActive = true
@@ -147,7 +145,7 @@ final class  ProfileViewController: UIViewController {
     
     func navigateToSplashScreen() {
         let splashViewController = SplashViewController()
-        guard let window = UIApplication.shared.windows.first else {
+        guard let window = application.windows.first else {
             fatalError("splashViewController отсутствует для перехода")
         }
         window.rootViewController = splashViewController

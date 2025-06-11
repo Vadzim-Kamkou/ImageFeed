@@ -8,10 +8,20 @@ struct Photo {
     let welcomeDescription: String
     let thumbImageURL: String
     let largeImageURL: String
-    let isLiked: Bool
+    var isLiked: Bool
+}
+protocol ImagesListServiceProtocol: AnyObject {
+    var photos: [Photo] { get }
+    func fetchPhotosNextPage()
+    func changeLike(photoId: String, isLiked: Bool, completion: @escaping (Result<Void, Error>) -> Void)
+    static var didChangeNotification: Notification.Name { get }
 }
 
-final class ImagesListService {
+protocol LikeService {
+    func changeLikeStatus(photoId: String, isLiked: Bool, completion: @escaping (Result<Bool, Error>) -> Void)
+}
+
+final class ImagesListService: ImagesListServiceProtocol {
 
     //MARK: Property
     static let shared = ImagesListService()
@@ -189,3 +199,18 @@ final class ImagesListService {
         return request
     }
 }
+
+extension ImagesListService: LikeService {
+    func changeLikeStatus(photoId: String, isLiked: Bool, completion: @escaping (Result<Bool, Error>) -> Void) {
+        self.changeLike(photoId: photoId, isLiked: isLiked) { result in
+            switch result {
+            case .success:
+                let updatedPhoto = self.photos.first { $0.id == photoId }
+                completion(.success(updatedPhoto?.isLiked ?? !isLiked))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+}
+
